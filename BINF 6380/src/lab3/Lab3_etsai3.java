@@ -27,37 +27,41 @@ public class Lab3_etsai3 {
 		
 		String seq = "";
 		String name = "";
+		String first_name = ""; 
+		
 		for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
 		{
 			if(nextLine.startsWith(">"))
 			{
 				name = (nextLine.substring(1).split(" ")[0]);
-				seq = "";
 				name_list.add(name);
+				first_name = name_list.get(0);
 				
-				//for(nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
-				//{
-					//seq_list.add(seq);
-					if((nextLine.startsWith("A"))||(nextLine.startsWith("C"))||(nextLine.startsWith("G"))||(nextLine.startsWith("T")))
-					{
-						seq = seq + (nextLine.strip());
-						
-					}
-					else
-					{
-						seq_list.add(seq);
-						writer.write(name + "\t" + seq + "\n");
-						//break;
-					}
-				//}
-				//writer.write(name + "\t" + seq + "\n");
-				//writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + seq + "\n");
+				if(name.contentEquals(first_name))
+				{
+					writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
+				}
+				else
+				{
+				writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
+				seq_list.add(seq);
+				seq = "";
+				}
 			}
-		//writer.write(name + "\t" + seq);
+			else
+			{
+				seq = seq + (nextLine.strip());
+				//seq_list.add(seq);
+				//writer.write(name + "\t" + seq + "\n");
+				//break;
+			}
+
+				//writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + seq + "\n");
 		}
+		//writer.write(name + "\t" + seq);
 		//writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + seq + "\n");
 		System.out.println(name_list);
-		System.out.println(seq_list);
+		System.out.println(seq_list.size());
 		writer.flush(); 
 		writer.close();
 		reader.close();

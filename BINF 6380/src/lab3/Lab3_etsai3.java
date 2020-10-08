@@ -11,19 +11,27 @@ import java.io.File;
 
 public class Lab3_etsai3 {
 	
+//	you can change the path and filename to what you want here
 	private static final String path = "/Users/erintsigh/git/UNCC-BINF-Work/BINF 6380/src/"; 
 	private static final String filename = "Mdomestica_short";
 	
+	
+//	this method reads the file, parses the sequence name and sequence, then runs nucleotide counts method 4x for each nucleotide, 
+//	then writes it all out to a new file. the new file will have the same path and name as the original file, but it will end in .txt
+	
+//	** having an issue with the parser where the first sequence doesn't match up with the first name. it skips the first name
+//	and then goes to the second row. So the first name has no sequence, second name has the first sequence, third name has second sequence,
+//	etc. and then the last sequence isn't listed at all. **
 	private static void fasta_parse(String path, String filename) throws IOException
 	{
-		List<String> name_list = new ArrayList<String>();
-		List<String> seq_list = new ArrayList<String>();
+		//List<String> name_list = new ArrayList<String>();
+		//List<String> seq_list = new ArrayList<String>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new File(path + filename+ ".fasta")));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path+filename+".txt")));
 		
 		writer.write("sequenceID" + "\t" + "numA" + "\t" + "numC" + "\t" + "numG" + "\t" + "numT" + "\t" + "sequence" + "\n");
-		
+		System.out.println("sequenceID" + "\t" + "numA" + "\t" + "numC" + "\t" + "numG" + "\t" + "numT" + "\t" + "sequence" + "\n");
 		
 		String seq = "";
 		String name = "";
@@ -34,39 +42,37 @@ public class Lab3_etsai3 {
 			if(nextLine.startsWith(">"))
 			{
 				name = (nextLine.substring(1).split(" ")[0]);
-				name_list.add(name);
-				first_name = name_list.get(0);
+				//System.out.println(name + "\t" + seq);
+				//name_list.add(name);
+				//first_name = name_list.get(0);
 				
-				if(name.contentEquals(first_name))
-				{
-					writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
-				}
-				else
-				{
+
 				writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
-				seq_list.add(seq);
+				System.out.println(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
+				//seq_list.add(seq);
 				seq = "";
-				}
+				
 			}
 			else
 			{
-				seq = seq + (nextLine.strip());
+				seq = seq + nextLine.strip();
 				//seq_list.add(seq);
 				//writer.write(name + "\t" + seq + "\n");
 				//break;
 			}
 
-				//writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + seq + "\n");
+				
 		}
-		//writer.write(name + "\t" + seq);
-		//writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + seq + "\n");
-		System.out.println(name_list);
-		System.out.println(seq_list.size());
+		
+		//System.out.println(name_list);
+		//System.out.println(seq_list.size());
 		writer.flush(); 
 		writer.close();
 		reader.close();
 	}
 	
+	
+//	this method calculates the amount of a specific nucleotide, needs a string to look through and a character to look for	
 	private static int nuc_number(String sequence, char nuc) throws IOException
 	{
 		int num_nuc = 0;
@@ -83,6 +89,7 @@ public class Lab3_etsai3 {
 		return num_nuc;
 	}
 
+//	main method that runs the parser method
 	public static void main(String[] args) throws IOException
 	{
 		

@@ -19,9 +19,6 @@ public class Lab3_etsai3 {
 //	this method reads the file, parses the sequence name and sequence, then runs nucleotide counts method 4x for each nucleotide, 
 //	then writes it all out to a new file. the new file will have the same path and name as the original file, but it will end in .txt
 	
-//	** having an issue with the parser where the first sequence doesn't match up with the first name. it skips the first name
-//	and then goes to the second row. So the first name has no sequence, second name has the first sequence, third name has second sequence,
-//	etc. and then the last sequence isn't listed at all. **
 	private static void fasta_parse(String path, String filename) throws IOException
 	{
 		//List<String> name_list = new ArrayList<String>();
@@ -37,6 +34,9 @@ public class Lab3_etsai3 {
 		String name = "";
 		String first_name = ""; 
 		
+//		read the first line, blank line.
+		reader.readLine();
+		
 		for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
 		{
 			if(nextLine.startsWith(">"))
@@ -45,13 +45,11 @@ public class Lab3_etsai3 {
 				//System.out.println(name + "\t" + seq);
 				//name_list.add(name);
 				//first_name = name_list.get(0);
-				
 
 				writer.write(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
 				System.out.println(name + "\t" + nuc_number(seq,'A') + "\t" + nuc_number(seq, 'C') + "\t" + nuc_number(seq, 'G') + "\t" + nuc_number(seq, 'T') + "\t" + seq + "\n");
 				//seq_list.add(seq);
 				seq = "";
-				
 			}
 			else
 			{
@@ -60,7 +58,7 @@ public class Lab3_etsai3 {
 				//writer.write(name + "\t" + seq + "\n");
 				//break;
 			}
-
+			
 				
 		}
 		

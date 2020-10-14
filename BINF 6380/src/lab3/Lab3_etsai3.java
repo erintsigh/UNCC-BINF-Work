@@ -26,7 +26,7 @@ public class Lab3_etsai3 {
 		writer.write("sequenceID" + "\t" + "numA" + "\t" + "numC" + "\t" + "numG" + "\t" + "numT" + "\t" + "sequence" + "\n");
 		System.out.println("sequenceID" + "\t" + "numA" + "\t" + "numC" + "\t" + "numG" + "\t" + "numT" + "\t" + "sequence" + "\n");
 		
-		String seq = "";
+		StringBuffer seq = new StringBuffer();
 		String name = "";
 		int counter = 0;
 		
@@ -44,11 +44,11 @@ public class Lab3_etsai3 {
 				}
 				
 				name = (nextLine.substring(1).split(" ")[0]);
-				seq = "";
+				seq = new StringBuffer();
 			}
 			else
 			{
-				seq = seq + nextLine.strip();
+				seq.append(nextLine);
 			}
 			
 			counter ++;
@@ -65,7 +65,7 @@ public class Lab3_etsai3 {
 	
 	
 //	this method calculates the amount of a specific nucleotide, needs a string to look through and a character to look for	
-	private static int nuc_number(String sequence, char nuc) throws IOException
+	private static int nuc_number(StringBuffer sequence, char nuc) throws IOException
 	{
 		int num_nuc = 0;
 		

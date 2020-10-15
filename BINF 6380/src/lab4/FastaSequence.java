@@ -21,6 +21,8 @@ public class FastaSequence {
 	public String getHeader()
 	{
 		header = (header.substring(1).split(" ")[0]);
+//	the line above or below do the same thing. Either works for future reference.
+//		header = header.replace('>', ' ').strip();
 		return header;
 	}
 	
@@ -74,6 +76,7 @@ public class FastaSequence {
 				{
 					fs_list.add(new FastaSequence(header, sequence.toString()));
 				}
+				header = nextLine;
 				sequence = new StringBuffer();
 			}
 			else

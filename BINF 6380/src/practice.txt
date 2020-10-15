@@ -1,0 +1,5 @@
+sequenceID	numA	numC	numG	numT	sequence
+seq1	3	0	0	5	ATTTTATA
+seq2	3	2	3	2	GCTAAGAGCT
+seq3	6	0	0	6	TATATATATATA
+seq4	2	3	1	3	CTACTCTGA

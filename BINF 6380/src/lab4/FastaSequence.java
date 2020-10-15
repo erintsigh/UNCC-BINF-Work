@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.io.File;
 
@@ -85,6 +86,7 @@ public class FastaSequence {
 		fs_list.add(new FastaSequence(header, sequence.toString()));
 		reader.close();
 		
+		//System.out.println(fs_list);
 		return fs_list;
 	}
 
@@ -94,6 +96,13 @@ public class FastaSequence {
 		BufferedReader reader = new BufferedReader(new FileReader(new File(inFile)));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outFile)));
 		
+		//List<FastaSequence> fastaList = FastaSequence.readFastaFile(filepath);
+		//HashMap<String, Integer> numberMap = new HashMap<String, Integer>();
+		
+		//for(FastaSequence fs_list: fastaList)
+		//{
+		//	numberMap.put(fs_list.getSequence());
+		//}
 		
 		writer.write("hi");
 		writer.flush(); 

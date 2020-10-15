@@ -12,7 +12,7 @@ public class Lab4_etsai3
 		
 		for(FastaSequence fs_list: fastaList)
 		{
-			System.out.println(fs_list.getHeader());
+			//System.out.println(fs_list.getHeader());
 			System.out.println(fs_list.getSequence());
 			System.out.println(fs_list.getGCRatio());
 		}

@@ -10,13 +10,14 @@ public class Lab4_etsai3
 	{
 		List<FastaSequence> fastaList = FastaSequence.readFastaFile(filepath);
 		
-		for(FastaSequence fs_list: fastaList)
+		for(FastaSequence fs: fastaList)
 		{
-			System.out.println(fs_list.getHeader());
-			System.out.println(fs_list.getSequence());
-			System.out.println(fs_list.getGCRatio());
+			System.out.println(fs.getHeader());
+			System.out.println(fs.getSequence());
+			System.out.println("GC content: " + fs.getGCRatio());
+			System.out.println("\n");
 		}
-		//FastaSequence.writeUnique(filepath);
+		FastaSequence.writeUnique(filepath,"/Users/erintsigh/git/UNCC-BINF-Work/BINF 6380/src/unique_fastas.txt");
 	}
 	
 }

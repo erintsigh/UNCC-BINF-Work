@@ -5,8 +5,11 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.io.File;
 
 public class FastaSequence {
@@ -59,7 +62,7 @@ public class FastaSequence {
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaSequence.filepath)));
 		
-		List<FastaSequence> fs_list = new ArrayList<FastaSequence>();
+		List<FastaSequence> fs = new ArrayList<FastaSequence>();
 		
 		String header = "";
 		StringBuffer sequence = new StringBuffer();
@@ -74,7 +77,7 @@ public class FastaSequence {
 			{
 				if(counter!=0)
 				{
-					fs_list.add(new FastaSequence(header, sequence.toString()));
+					fs.add(new FastaSequence(header, sequence.toString()));
 				}
 				header = nextLine;
 				sequence = new StringBuffer();
@@ -86,28 +89,43 @@ public class FastaSequence {
 			
 			counter ++;
 		}
-		fs_list.add(new FastaSequence(header, sequence.toString()));
+		fs.add(new FastaSequence(header, sequence.toString()));
 		reader.close();
-		
-		//System.out.println(fs_list);
-		return fs_list;
+
+		return fs;
 	}
 
-	
+//that writes each unique sequence to the output file with the # of times each sequence was 
+//	seen in the input file as the header (sorted with the sequence seen the fewest times the first)
+
+
 	public static void writeUnique(String inFile, String outFile) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(inFile)));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outFile)));
+		List<FastaSequence> fastaList = FastaSequence.readFastaFile(filepath);
+		HashMap<String, String> fastaMap = new HashMap<String, String>();
+		Map<String, Integer> numberMap = new HashMap<String, Integer>();
 		
-		//List<FastaSequence> fastaList = FastaSequence.readFastaFile(filepath);
-		//HashMap<String, Integer> numberMap = new HashMap<String, Integer>();
+		for(FastaSequence fs: fastaList)
+		{
+			fastaMap.put(fs.getHeader(), fs.getSequence());
+		}
 		
-		//for(FastaSequence fs_list: fastaList)
-		//{
-		//	numberMap.put(fs_list.getSequence());
-		//}
+		Collection<String> fastaValues = fastaMap.values();
 		
-		writer.write("hi");
+		for(String value : fastaValues)
+		{
+			numberMap.put(value,(Collections.frequency(fastaValues, value)));
+		}
+		
+		for(String key: numberMap.keySet())
+		{
+			
+			writer.write(">" + key + "\n" + numberMap.get(key) + "\n");
+			System.out.println(">" + key + "\n" + numberMap.get(key) + "\n");
+		}
+
 		writer.flush(); 
 		writer.close();
 		reader.close();

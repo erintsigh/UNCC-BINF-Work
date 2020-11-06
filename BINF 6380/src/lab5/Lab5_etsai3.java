@@ -8,22 +8,16 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.charset.Charset;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
@@ -37,12 +31,12 @@ public class Lab5_etsai3 implements ActionListener
 	JLabel label1, label2;
 	ButtonGroup buttons;
 	
-	List<String> question = Arrays.asList("1) Which boop bop made meep mops? ", "2) Why did the meep mop do bloops? ");
-	List<String> choice1 = Arrays.asList("This one", "A1");
-	List<String> choice2 = Arrays.asList("B", "B1");
-	List<String> choice3 = Arrays.asList("C", "This one.");
-	List<String> choice4 = Arrays.asList("D", "D1");
-	List<String> answer = Arrays.asList("This one", "This one.");
+	List<String> question = Arrays.asList("1) Will I get a 100% on this lab assignment? ", "2) Is this quiz completely useless? ");
+	List<String> choice1 = Arrays.asList("Maybe!", "Yes.");
+	List<String> choice2 = Arrays.asList("Unlikely.", "Sort of?");
+	List<String> choice3 = Arrays.asList("No.", "How did I get here?");
+	List<String> choice4 = Arrays.asList("Yes!", "Java!");
+	List<String> answer = Arrays.asList("Unlikely.", "Sort of?");
 	
 	int num;
 	int lsize = question.size();
@@ -63,19 +57,19 @@ public class Lab5_etsai3 implements ActionListener
 		label1.setFont(qf);
 		
 		button1 = new JRadioButton(choice1.get(0));
-		button1.setBounds(100,120,100,30);
+		button1.setBounds(100,120,200,30);
 		aFrame.add(button1);
 		
 		button2 = new JRadioButton(choice2.get(0));
-		button2.setBounds(350,120,100,30);
+		button2.setBounds(350,120,200,30);
 		aFrame.add(button2);
 		
 		button3 = new JRadioButton(choice3.get(0));
-		button3.setBounds(100,200,100,30);
+		button3.setBounds(100,200,200,30);
 		aFrame.add(button3);
 		
 		button4 = new JRadioButton(choice4.get(0));
-		button4.setBounds(350,200,100,30);
+		button4.setBounds(350,200,200,30);
 		aFrame.add(button4);
 		
 		buttons = new ButtonGroup();
@@ -199,7 +193,7 @@ public class Lab5_etsai3 implements ActionListener
 	{
 		JFileChooser jfc = new JFileChooser();
 		
-		if(jfc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION)
+		if(jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
 		{
 			return;
 		}
@@ -213,11 +207,28 @@ public class Lab5_etsai3 implements ActionListener
 		
 		if(jfc.getSelectedFile().exists())
 		{
-			String message = ("File ") + jfc.getSelectedFile().getName() + (" exists. Overwrite?");
-			if(JOptionPane.showConfirmDialog(this, message) != JOptionPane.YES_OPTION)
+			String outMessage = "File " + jfc.getSelectedFile().getName() + " exists. Overwrite?";
+			if(JOptionPane.showConfirmDialog(null, outMessage) != JOptionPane.YES_OPTION)
 			{
 				return;
 			}
+		}
+		
+		try
+		{
+			BufferedWriter writer = new BufferedWriter(new FileWriter(chosenFile));
+			for(int i = 0; i < lsize; i++)
+			{
+				writer.write("Quiz \n" + question.get(i) + "\n" + choice1.get(i) + "\n" + choice2.get(i) + "\n" + choice3.get(i) + "\n" + choice4.get(i) + "\n");
+			}
+			writer.flush();
+			writer.close();
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			String errorMes = ex.getMessage();
+			JOptionPane.showMessageDialog(null, errorMes, "Could not write file", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

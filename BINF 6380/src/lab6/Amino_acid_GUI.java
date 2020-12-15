@@ -13,6 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+//Amino acid quiz gui, 30 second timer
+//must hit ****Start**** button to start the timer countdown
+
 public class Amino_acid_GUI extends JFrame
 {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +24,7 @@ public class Amino_acid_GUI extends JFrame
 	private int incorrect = 0;
 	private int total_time = 30;
 	
+	//using the swing timer
 	Timer timer_countdown;
 	private int timer_count = 0;
 	
@@ -46,6 +50,13 @@ public class Amino_acid_GUI extends JFrame
 	private JLabel time_label = new JLabel();
 	private JLabel aa_label = new JLabel();
 	
+	//contains most of the GUI functionality:
+	//main panel contains the actual quiz portion
+	//score panel contains the incorrect and correct count, it also contains the timer countdown
+	//bottom panel has the start button, cancel button, and exit button. 
+	//the user must hit the start button to start the countdown timer
+	//cancel button cancels the quiz, stops timer, resets the counts and timer
+	//exit button quits out of the entire GUI
 	public Amino_acid_GUI() {
 		super("Amino Acid Quiz");
 		aFrame.setSize(900,550);
@@ -67,6 +78,10 @@ public class Amino_acid_GUI extends JFrame
 
 		exit_button.addActionListener(new CloseWindow());
 		
+		//timer action listener, if the timer counts up to 30 seconds, then a joptionpane pops up to tell you time is up
+		//and your score, then another joptionpane tells you can you start over
+		//clears the time label, correct label, and incorrect label
+		//must hit start button to start the quiz over
 		timer_countdown = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -89,15 +104,25 @@ public class Amino_acid_GUI extends JFrame
 			}
 		});
 		
+		//start button action listener, starts the timer countdown
 		start_button.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				incorrect = 0;
+				correct = 0;
+				total_time = 30;
+				time_label.setText("Time Left: " + "--");
+				correct_label.setText("Correct: --  ");
+				incorrect_label.setText("Incorrect: --  ");
 				timer_countdown.start();
 			}
 			
 		});
 		
+		//cancel button stops timer countdown, and restarts the total time, correct and incorrect counters
+		//displays joptionpane to tell you quiz was cancelled
+		//need to select start button to start quiz over
 		cancel_button.addActionListener(new ActionListener() {
 
 			@Override
@@ -119,6 +144,8 @@ public class Amino_acid_GUI extends JFrame
 		JOptionPane.showMessageDialog(null, "Enter the one letter code for each amino acid. \nYou have 30 seconds to get as many correct as possible. \n\nPress Start to Begin once you exit this window! ");
 	}
 	
+	//this is the main panel that displays the randomly chosen amino acid, the textbox that the user can enter their answer, 
+	//and the submit button the user needs to choose to enter in their guess.
 	private JPanel Quiz_panel()
 	{
 		JPanel main_panel = new JPanel();
@@ -127,16 +154,20 @@ public class Amino_acid_GUI extends JFrame
 		main_panel.add(user_answer);
 		main_panel.add(submit_button);
 		
-		int randOuter = RANDOM.nextInt(20);
-		aa_label.setText(FULL_NAMES[randOuter]);
+		//calls a random integer between 1-20 then chooses a random amino acid by calling a random int to then choose from the list of amino acids
+		int rand1 = RANDOM.nextInt(20);
+		aa_label.setText(FULL_NAMES[rand1]);
+		
+		//adds an action listener to the submit button to also check the user's answer. if the answer is correct it is displayed under the correct
+		//label, if incorrect displayed under the incorrect label. 
 		submit_button.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String s = user_answer.getText();
-				String q = SHORT_NAMES[Arrays.asList(FULL_NAMES).indexOf(aa_label.getText())];
+				String answer = user_answer.getText();
+				String check = SHORT_NAMES[Arrays.asList(FULL_NAMES).indexOf(aa_label.getText())];
 
-				if (q.equals(s.toUpperCase())) {
+				if (check.equals(answer.toUpperCase())) {
 					correct++;
 					//System.out.println("correct: " + correct);
 					correct_label.setText("Correct: " + String.valueOf(correct) + "\t ");
@@ -147,8 +178,8 @@ public class Amino_acid_GUI extends JFrame
 					incorrect_label.setText("Incorrect: " + String.valueOf(incorrect) + "\t ");
 					user_answer.setText("");
 					}
-				int randInner = RANDOM.nextInt(20);
-				aa_label.setText(FULL_NAMES[randInner]);
+				int rand2 = RANDOM.nextInt(20);
+				aa_label.setText(FULL_NAMES[rand2]);
 				
 			}	
 			
@@ -157,6 +188,7 @@ public class Amino_acid_GUI extends JFrame
 		return main_panel;
 	}
 	
+	//Class that closes the window and stops the run. 
 	private class CloseWindow implements ActionListener
 	{
 		@Override
@@ -166,7 +198,7 @@ public class Amino_acid_GUI extends JFrame
 		}
 	}
 	
-	
+	//main method
 	public static void main(String[] args)
 	{
 		new Amino_acid_GUI();

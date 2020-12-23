@@ -33,11 +33,15 @@ public class FastaParser {
 	
 	private List<FastaParser> pam_group;
 	
-	private List<String> pam_matches = new ArrayList<String>();
-	private List<String> pos_matches = new ArrayList<String>();
+	private static List<String> pam_matches = new ArrayList<String>();
+	private static List<String> pos_matches = new ArrayList<String>();
 	
 	public static ArrayList<String> symbol = new ArrayList<String>(Arrays.asList("A","T","G","C","W","S","M","K","R","Y","B","D","H","V","N"));
 	public static ArrayList<String> nuc_reps = new ArrayList<String>(Arrays.asList("A", "T", "G", "C", "[AT]", "[CG]", "[AC]", "[GT]", "[AG]", "[CT]", "[CGT]", "[AGT]", "[ACT]", "[ACG]", "[ACGT]"));
+
+	private static List<String> heads;
+
+	private static List<String> seqs;
 
 	//private List<String> PAM_seqs = new ArrayList<String>();
 	
@@ -98,6 +102,7 @@ public class FastaParser {
 	public static String getPAMregex(String pam_seq)
 	{
 		String pamsite_re = new String();
+		pam_seq = pam_seq.toUpperCase();
 		
 		for(char nuc : pam_seq.toCharArray())
 		{
@@ -111,31 +116,37 @@ public class FastaParser {
 	
 	
 	
-	public List<String> getPAMs(String pam_reg, String seq)
+	public static List<String> getPAMs(String pam_reg, String sequence)
 	{
-		Matcher matcher = Pattern.compile(pam_reg).matcher(seq);
+		Matcher matcher = Pattern.compile(pam_reg).matcher(sequence);
 		
-		if(matcher.find())
-		{
+		//System.out.println(pam_reg);
+		//System.out.println(sequence);
+		
+		//MatchResult result = matcher.toMatchResult(); 
+		//System.out.println("Current Matcher: " + result);
+		
+		//if(matcher.find())
+		//{
 			while(matcher.find())
 			{
 				pam_matches.add(matcher.group());
 				//pam_pos.add(String.valueOf(pam_match.start()+1));
 			}
-		}
-		else
-		{
-			pam_matches.add("NOTHING FOUND");
-		}
+
+		//}
+		//else
+		//{
+		//	pam_matches.add("NOTHING FOUND");
+		//}
 		
 		return pam_matches;
 	}
 	
 
-	public List<String> getPAMpos(String pam_reg)
+	public static List<String> getPAMpos(String pam_reg, String sequence)
 	{
 		Matcher matcher = Pattern.compile(pam_reg).matcher(sequence);
-		
 		while(matcher.find())
 		{
 			//matches.add(pam_match.group());
@@ -172,6 +183,8 @@ public class FastaParser {
 		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
 		
 		List<FastaParser> fs = new ArrayList<FastaParser>();
+		heads = new ArrayList<String>();
+		seqs = new ArrayList<String>();
 		
 		String header = "";
 		StringBuffer sequence = new StringBuffer();
@@ -198,10 +211,76 @@ public class FastaParser {
 			
 			counter ++;
 		}
+		heads.add(header);
+		seqs.add(sequence.toString());
 		fs.add(new FastaParser(header, sequence.toString()));
 		reader.close();
 		return fs;
 	
+	}
+	
+	public static List<String> getHeads(String filepath) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
+		
+		heads = new ArrayList<String>();
+		seqs = new ArrayList<String>();
+		
+		String header = "";
+		StringBuffer sequence = new StringBuffer();
+		
+//		iterating over every line to read in, if the line starts with a ">" then, it moves onto the next if statement
+//		the next if statement says if the counter doesn't equal 0, then write out the name, nucleotide %'s, and sequence to the txt file
+//		the counter adds 1 each time the for loop iterates.
+		for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
+		{
+			if(nextLine.startsWith(">"))
+			{
+				header = nextLine;
+				sequence = new StringBuffer();
+			}
+			else
+			{
+				sequence.append(nextLine);
+			}
+			
+		}
+		heads.add(header);
+		seqs.add(sequence.toString());
+		reader.close();
+		return heads;
+	}
+	
+	public static List<String> getSeqs(String filepath) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
+		
+		heads = new ArrayList<String>();
+		seqs = new ArrayList<String>();
+		
+		String header = "";
+		StringBuffer sequence = new StringBuffer();
+		
+//		iterating over every line to read in, if the line starts with a ">" then, it moves onto the next if statement
+//		the next if statement says if the counter doesn't equal 0, then write out the name, nucleotide %'s, and sequence to the txt file
+//		the counter adds 1 each time the for loop iterates.
+		for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
+		{
+			if(nextLine.startsWith(">"))
+			{
+				header = nextLine;
+				sequence = new StringBuffer();
+			}
+			else
+			{
+				sequence.append(nextLine);
+			}
+			
+		}
+		heads.add(header);
+		seqs.add(sequence.toString());
+		reader.close();
+		return seqs;
 	}
 
 	

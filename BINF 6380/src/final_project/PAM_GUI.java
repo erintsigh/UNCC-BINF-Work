@@ -123,86 +123,7 @@ public class PAM_GUI extends JFrame
 		List<FastaParser> fastaList = FastaParser.readFastaFile(filepath);
 		String pamsite_enter = new String();
 		
-		start_button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try 
-				{
-					CardLayout c = (CardLayout)(cards.getLayout());
-					c.show(cards, "end");
-					found_display.setText("");
-					String pam_enter = (pam_user.getText()).toUpperCase();
-					String pam_regex = FastaParser.getPAMregex(pamsite_enter);
-					int len_pam = pam_enter.length();
-					
-					if(len_pam > 1 && len_pam <7)
-					{
-						found_display.append("Finding PAM sites with: " + pam_enter + "\n\n");
-						
-						for(FastaParser fs: fastaList)
-						{
-							String seq = fs.getSequence();
-							String head = fs.getHeader();
-							
-							List<String> pam_matches = new ArrayList<String>(); 
-							List<String> pos_matches = new ArrayList<String>();
-							
-							Matcher matcher = Pattern.compile(pam_regex).matcher(seq);
-							
-							if(matcher.find())
-							{
-								while(matcher.find())
-								{
-									pam_matches.add(matcher.group());
-									pos_matches.add(String.valueOf(matcher.start()+1));
-								}
-							}
-							else
-							{
-								pam_matches.add("NOTHING FOUND");
-								pos_matches.add("NOTHING FOUND");
-							}
-							
-							for(int i=0; i<pam_matches.size(); i++)
-							{
-								System.out.println("PAM found " + pam_matches.get(i) + "\n");
-								System.out.println("pos: " + pos_matches.get(i) + "\n\n");
-							}
-							
-							
-							//found_display.append(head + "\n");
-							//found_display.append(seq + "\n");
-
-							//for(int i=0; i < (fs.getPAMpos(pam_regex)).size(); i++)
-							//{
-								//found_display.append("PAMS: " + getPAMs(pam_regex, seq));
-								//found_display.append("PAM's found: " + fs.getPAMs(pam_regex) + "\n");
-							//	found_display.append("PAM positions found: " +((fs.getPAMpos(pam_regex))) + "\n\n");
-								
-							//}
-							
-						}
-						
-					}
-					else
-					{
-						JOptionPane.showMessageDialog(null, ("ERROR. You must enter a PAM site between 2-7bps."));
-						pam_user.setText("");
-						CardLayout c1 = (CardLayout)(cards.getLayout());
-						c1.show(cards, "start");
-					}
-				
-				}
-				catch(Exception ex)
-				{
-					pam_user.setText("");
-					CardLayout c = (CardLayout)(cards.getLayout());
-					c.show(cards, "start");
-				}
-				
-			}
-		});
-		
+		start_button.addActionListener(new startWork());
 		return panel;
 	}
 	
@@ -303,6 +224,84 @@ public class PAM_GUI extends JFrame
 		}
 	}
 	
+	
+	private class startWork implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try 
+			{
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "end");
+				found_display.setText("");
+
+				String pam_enter = (pam_user.getText()).toUpperCase();
+				String pam_regex = FastaParser.getPAMregex(pam_enter);
+				//System.out.println(pam_enter);
+				//System.out.println(pam_regex);
+				int len_pam = pam_enter.length();
+				String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
+				List<String> seqs = new ArrayList<String>(); 
+				List<String> heads = new ArrayList<String>(); 
+
+				
+				if(len_pam > 1 && len_pam <7)
+				{
+					found_display.append("Finding PAM sites with: " + pam_enter + "\n\n");
+					/*
+					for(FastaParser fs: fastaList)
+					{
+						String seq = fs.getSequence();
+						String head = fs.getHeader();
+						found_display.append(head + ": \n" + seq);
+						
+						seqs.add(seq);
+						heads.add(head);
+					}*/
+				heads = FastaParser.getHeads(filepath);
+				seqs = FastaParser.getSeqs(filepath);
+
+				//System.out.println(seq_size);
+				//System.out.println(heads.size());
+				//System.out.println(seqs.size());
+				
+				for(int i = 0; i < 1; i++)
+				{
+					found_display.append(heads.get(i) + "\n");
+					found_display.append(seqs.get(i) + "\n\n");
+					int pam_list_size = ((FastaParser.getPAMs(pam_regex,seqs.get(i)).size()));
+					
+					for(int ii=0; ii < (pam_list_size); ii++)
+					{
+							found_display.append("PAM found " + (FastaParser.getPAMs(pam_regex, seqs.get(i)).get(ii)) + "\n");
+							found_display.append("pos: " + (FastaParser.getPAMpos(pam_regex, seqs.get(i)).get(ii)) + "\n\n");
+
+					}
+					found_display.append("End of search for " + seqs.get(i));
+				}
+
+					
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, ("ERROR. You must enter a PAM site between 2-7bps."));
+					pam_user.setText("");
+					CardLayout c1 = (CardLayout)(cards.getLayout());
+					c1.show(cards, "start");
+				}
+			
+			}
+			catch(Exception ex)
+			{
+				pam_user.setText("");
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "start");
+				JOptionPane.showMessageDialog(null, ("ERROR."));
+			}
+			
+		}
+	}
+	
 	public static void main(String[] args) throws Exception
 	{
 		new PAM_GUI();
@@ -312,10 +311,10 @@ public class PAM_GUI extends JFrame
 		String pam_regex = FastaParser.getPAMregex(pamsite_new);
 		
 		String filepath = "/Users/erintsigh/git/UNCC-BINF-Work/BINF 6380/src/Mdomestica_short.fasta";
-		System.out.println(file_path);
+		//System.out.println(file_path);
 		List<FastaParser> fastaList = FastaParser.readFastaFile(filepath);
 		
-		
+		/*
 		for(FastaParser fs: fastaList)
 		{
 			//List<FastaParser> pamList = FastaParser.getPAMs(pam_regex, seq);
@@ -368,7 +367,7 @@ public class PAM_GUI extends JFrame
 				//}
 			//}
 			
-		}
+		}*/
 		
 
 		

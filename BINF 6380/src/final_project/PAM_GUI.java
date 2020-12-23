@@ -22,7 +22,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -51,10 +55,18 @@ public class PAM_GUI extends JFrame
 	private JButton cancel_button = new JButton("Cancel");
 	private JButton exit_button = new JButton("Exit");
 	private JButton new_button = new JButton("New Run");
+	private JButton exit = new JButton("Exit");
+	private JButton export_button = new JButton("Export");
+	private JButton export_btn = new JButton("Write VCF");
+	private JButton exit_btn = new JButton("Exit");
+	private JButton newrun_btn = new JButton("New Run");
+	
 	private JTextField pam_user = new JTextField(20);
 	//private JTextField fasta_file = new JTextField(20);
 	private JTextArea found_display = new JTextArea(200,50);
+	private JTextArea found_disp = new JTextArea(200,50);
 	private final JScrollPane scroll_window = new JScrollPane(found_display);
+	private final JScrollPane scrolly = new JScrollPane(found_disp);
 	
 	private String pam_enter;
 	private volatile long count = 0;
@@ -71,7 +83,8 @@ public class PAM_GUI extends JFrame
 		cards = new JPanel(new CardLayout());
 		cards.add(startPanel(), "start");
 		//cards.add(progressPanel(), "progress");
-		cards.add(endPanel(), "end");
+		cards.add(resultsPanel(), "results");
+		cards.add(exportPanel(), "export");
 		
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(cards, BorderLayout.CENTER);
@@ -120,58 +133,69 @@ public class PAM_GUI extends JFrame
 		
 		exit_button.addActionListener(new CloseWindow());
 		
-		List<FastaParser> fastaList = FastaParser.readFastaFile(filepath);
-		String pamsite_enter = new String();
-		
 		start_button.addActionListener(new startWork());
+		
 		return panel;
 	}
 	
-	private JPanel progressPanel()
+	
+	
+	private JPanel exportPanel()
 	{
 		JPanel panel = new JPanel();
 		JPanel bottom_panel = new JPanel();
-		JButton start = new JButton("Start");
-		JButton exit_btn = new JButton("Exit");
+		JPanel export_panel = new JPanel(); 
 		
-		bottom_panel.setLayout(new GridLayout(0,3));
-		bottom_panel.add(start);
-		bottom_panel.add(cancel_button);
+		JLabel export_lb = new JLabel("Write out results to a VCF file: ");
+		
+		//JButton export_btn = new JButton("Write VCF");
+		//JButton exit_btn = new JButton("Exit");
+		//JButton newrun_btn = new JButton("New Run");
+		
+		bottom_panel.setLayout(new GridLayout(0,2));
+		bottom_panel.add(newrun_btn);
 		bottom_panel.add(exit_btn);
 		
+		export_panel.setLayout(new GridLayout(0,2));
+		export_panel.add(export_lb);
+		export_panel.add(export_btn);
+		
 		panel.setLayout(new BorderLayout());
-		found_display.setEditable(false);
-		panel.add(found_display, BorderLayout.CENTER);
+		panel.add(export_panel, BorderLayout.NORTH);
+		panel.add(scrolly, BorderLayout.CENTER);
 		panel.add(bottom_panel, BorderLayout.SOUTH);
-		start.addActionListener(new ActionListener() {
+		
+		newrun_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				cancel = false;
-				start.setEnabled(false);
-				cancel_button.setEnabled(true);
-				//new Thread(new runnable()).start();
+				found_display.setText("");
+				found_disp.setText("");
+				start_button.setEnabled(true);
+				exit_btn.setEnabled(true);
+				export_btn.setEnabled(true);
+				newrun_btn.setEnabled(true);
+				pam_user.setText("");
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "start");
 			}
 		});
 		
-		cancel_button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				cancel = true;
-			}
-		});
+		export_btn.addActionListener(new exportResults());
 		
 		exit_btn.addActionListener(new CloseWindow());
 		
 		return panel;
 	}
 	
-	private JPanel endPanel()
+	private JPanel resultsPanel()
 	{
 		JPanel panel = new JPanel();
 		JPanel bottom_panel = new JPanel();
-		JButton exit = new JButton("Exit");
+		//JButton exit = new JButton("Exit");
+		//JButton export_button = new JButton("Export");
 		
-		bottom_panel.setLayout(new GridLayout(0,2));
+		bottom_panel.setLayout(new GridLayout(0,3));
+		bottom_panel.add(export_button);
 		bottom_panel.add(new_button);
 		bottom_panel.add(exit);
 		
@@ -179,11 +203,25 @@ public class PAM_GUI extends JFrame
 		panel.add(scroll_window);
 		panel.add(bottom_panel, BorderLayout.SOUTH);
 		
+		export_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				start_button.setEnabled(true);
+				export_button.setEnabled(true);
+				exit.setEnabled(true);
+				CardLayout c1 = (CardLayout)(cards.getLayout());
+				c1.show(cards, "export");
+			}
+		});
+		
 		new_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				found_display.setText("");
+				found_disp.setText("");
 				start_button.setEnabled(true);
+				export_button.setEnabled(true);
+				exit.setEnabled(true);
 				pam_user.setText("");
 				CardLayout c = (CardLayout)(cards.getLayout());
 				c.show(cards, "start");
@@ -232,8 +270,9 @@ public class PAM_GUI extends JFrame
 			try 
 			{
 				CardLayout c = (CardLayout)(cards.getLayout());
-				c.show(cards, "end");
+				c.show(cards, "results");
 				found_display.setText("");
+				found_disp.setText("");
 
 				String pam_enter = (pam_user.getText()).toUpperCase();
 				String pam_regex = FastaParser.getPAMregex(pam_enter);
@@ -245,19 +284,11 @@ public class PAM_GUI extends JFrame
 				List<String> heads = new ArrayList<String>(); 
 
 				
-				if(len_pam > 1 && len_pam <7)
+				if(len_pam > 1 && len_pam <8)
 				{
 					found_display.append("Finding PAM sites with: " + pam_enter + "\n\n");
-					/*
-					for(FastaParser fs: fastaList)
-					{
-						String seq = fs.getSequence();
-						String head = fs.getHeader();
-						found_display.append(head + ": \n" + seq);
-						
-						seqs.add(seq);
-						heads.add(head);
-					}*/
+					found_disp.append("Finding PAM sites with: " + pam_enter + "\n\n");
+
 				heads = FastaParser.getHeads(filepath);
 				seqs = FastaParser.getSeqs(filepath);
 
@@ -265,20 +296,27 @@ public class PAM_GUI extends JFrame
 				//System.out.println(heads.size());
 				//System.out.println(seqs.size());
 				
-				for(int i = 0; i < 1; i++)
-				{
-					found_display.append(heads.get(i) + "\n");
-					found_display.append(seqs.get(i) + "\n\n");
-					int pam_list_size = ((FastaParser.getPAMs(pam_regex,seqs.get(i)).size()));
-					
-					for(int ii=0; ii < (pam_list_size); ii++)
+					for(int i = 0; i < 1; i++)
 					{
-							found_display.append("PAM found " + (FastaParser.getPAMs(pam_regex, seqs.get(i)).get(ii)) + "\n");
-							found_display.append("pos: " + (FastaParser.getPAMpos(pam_regex, seqs.get(i)).get(ii)) + "\n\n");
-
+						found_display.append((heads.get(i)) + "\n");
+						found_disp.append((heads.get(i)) + "\n");
+						found_display.append(seqs.get(i) + "\n\n");
+						found_disp.append(seqs.get(i) + "\n\n");
+						int pam_list_size = ((FastaParser.getPAMs(pam_regex,seqs.get(i)).size()));
+						
+						for(int ii=0; ii < (pam_list_size); ii++)
+						{
+								found_display.append("PAM found " + (FastaParser.getPAMs(pam_regex, seqs.get(i)).get(ii)) + "\n");
+								found_disp.append("PAM found " + (FastaParser.getPAMs(pam_regex, seqs.get(i)).get(ii)) + "\n");
+								found_display.append("pos: " + (FastaParser.getPAMpos(pam_regex, seqs.get(i)).get(ii)) + "\n\n");
+								found_disp.append("pos: " + (FastaParser.getPAMpos(pam_regex, seqs.get(i)).get(ii)) + "\n\n");
+	
+						}
+						found_display.append("End of search for " + (heads.get(i).substring(1).split(" ")[0]) + "\n");
+						found_disp.append("End of search for " + (heads.get(i).substring(1).split(" ")[0]) + "\n");
+						found_display.append("PAM sites found in " + (heads.get(i).substring(1).split(" ")[0]) + " : " + pam_list_size);
+						found_disp.append("PAM sites found in " + (heads.get(i).substring(1).split(" ")[0]) + " : " + pam_list_size);
 					}
-					found_display.append("End of search for " + seqs.get(i));
-				}
 
 					
 				}
@@ -299,6 +337,136 @@ public class PAM_GUI extends JFrame
 				JOptionPane.showMessageDialog(null, ("ERROR."));
 			}
 			
+		}
+	}
+	/*
+	private JPanel progressPanel()
+	{
+		JPanel panel = new JPanel();
+		JPanel bottom_panel = new JPanel();
+		JButton start = new JButton("Start");
+		JButton exit_btn = new JButton("Exit");
+		
+		bottom_panel.setLayout(new GridLayout(0,3));
+		bottom_panel.add(start);
+		bottom_panel.add(cancel_button);
+		bottom_panel.add(exit_btn);
+		
+		panel.setLayout(new BorderLayout());
+		found_display.setEditable(false);
+		panel.add(found_display, BorderLayout.CENTER);
+		panel.add(bottom_panel, BorderLayout.SOUTH);
+		start.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				cancel = false;
+				start.setEnabled(false);
+				cancel_button.setEnabled(true);
+				//new Thread(new runnable()).start();
+			}
+		});
+		
+		cancel_button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				cancel = true;
+			}
+		});
+		
+		exit_btn.addActionListener(new CloseWindow());
+		
+		return panel;
+	}*/
+	
+	private class exportResults implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{	
+			JFileChooser jfc = new JFileChooser();
+			
+			if(jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
+			{
+				return;
+			}
+			
+			if(jfc.getSelectedFile() == null)
+			{
+				return;
+			}
+			
+			File chosenFile = jfc.getSelectedFile();
+			
+			if(jfc.getSelectedFile().exists())
+			{
+				String outMessage = "File " + jfc.getSelectedFile().getName() + " exists. Overwrite?";
+				if(JOptionPane.showConfirmDialog(null, outMessage) != JOptionPane.YES_OPTION)
+				{
+					return;
+				}
+			}
+			
+			try
+			{
+				BufferedWriter writer = new BufferedWriter(new FileWriter(chosenFile));
+				
+				String pam_enter = (pam_user.getText()).toUpperCase();
+				String pam_regex = FastaParser.getPAMregex(pam_enter);
+				int len_pam = pam_enter.length();
+				String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
+				List<String> seqs = new ArrayList<String>(); 
+				List<String> heads = new ArrayList<String>(); 
+				String seq = new String();
+				String head = new String();
+				String pam_found = new String();
+				String pos_found = new String();
+				
+				heads = FastaParser.getHeads(filepath);
+				seqs = FastaParser.getSeqs(filepath);
+				
+				writer.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO" + "\n");
+				for(int i = 0; i < 1; i++)
+				{
+					head = ((heads.get(i)).substring(1).split(" ")[0]).replace(">", "");
+					seq = (seqs.get(i));
+					int pam_list_size = ((FastaParser.getPAMs(pam_regex,seqs.get(i)).size()));
+					
+					for(int ii=0; ii < (pam_list_size); ii++)
+					{
+							pam_found = (FastaParser.getPAMs(pam_regex, seqs.get(i)).get(ii));
+							pos_found = (FastaParser.getPAMpos(pam_regex, seqs.get(i)).get(ii));
+							
+							writer.write(head + "\t" + pos_found + "\t" + ".\t" + pam_found + "\t" + pam_enter + "\t.\t.\t.\n");
+
+					}
+					
+				}
+				
+				writer.flush();
+				writer.close();
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "export");
+				start_button.setEnabled(true);
+				exit_btn.setEnabled(true);
+				export_button.setEnabled(true);
+				export_btn.setEnabled(true);
+				newrun_btn.setEnabled(true);
+				//pam_user.setText("");
+				//found_display.setText("");
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+				String errorMes = ex.getMessage();
+				JOptionPane.showMessageDialog(null, errorMes, "Could not write file", JOptionPane.ERROR_MESSAGE);
+				pam_user.setText("");
+				found_display.setText("");
+				found_disp.setText("");
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "start");
+				JOptionPane.showMessageDialog(null, ("ERROR."));
+			}
+
 		}
 	}
 	

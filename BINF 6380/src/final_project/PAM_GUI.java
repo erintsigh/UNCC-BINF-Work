@@ -144,16 +144,42 @@ public class PAM_GUI extends JFrame
 							String seq = fs.getSequence();
 							String head = fs.getHeader();
 							
-							found_display.append(head + "\n");
-							found_display.append(seq + "\n");
-
-							for(int i=0; i < (fs.getPAMpos(pam_regex)).size(); i++)
+							List<String> pam_matches = new ArrayList<String>();
+							List<String> pos_matches = new ArrayList<String>();
+							
+							Matcher matcher = Pattern.compile(pam_regex).matcher(seq);
+							
+							if(matcher.find())
 							{
+								while(matcher.find())
+								{
+									pam_matches.add(matcher.group());
+									pos_matches.add(String.valueOf(matcher.start()+1));
+								}
+							}
+							else
+							{
+								pam_matches.add("NOTHING FOUND");
+								pos_matches.add("NOTHING FOUND");
+							}
+							
+							for(int i=0; i<pam_matches.size(); i++)
+							{
+								System.out.println("PAM found " + pam_matches.get(i) + "\n");
+								System.out.println("pos: " + pos_matches.get(i) + "\n\n");
+							}
+							
+							
+							//found_display.append(head + "\n");
+							//found_display.append(seq + "\n");
+
+							//for(int i=0; i < (fs.getPAMpos(pam_regex)).size(); i++)
+							//{
 								//found_display.append("PAMS: " + getPAMs(pam_regex, seq));
 								//found_display.append("PAM's found: " + fs.getPAMs(pam_regex) + "\n");
-								found_display.append("PAM positions found: " +((fs.getPAMpos(pam_regex))) + "\n\n");
+							//	found_display.append("PAM positions found: " +((fs.getPAMpos(pam_regex))) + "\n\n");
 								
-							}
+							//}
 							
 						}
 						

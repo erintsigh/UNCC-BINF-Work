@@ -201,7 +201,7 @@ public class FastaParser {
 		fs.add(new FastaParser(header, sequence.toString()));
 		reader.close();
 		return fs;
-		
+	
 	}
 
 	

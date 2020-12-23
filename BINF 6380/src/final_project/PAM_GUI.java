@@ -144,7 +144,7 @@ public class PAM_GUI extends JFrame
 							String seq = fs.getSequence();
 							String head = fs.getHeader();
 							
-							List<String> pam_matches = new ArrayList<String>();
+							List<String> pam_matches = new ArrayList<String>(); 
 							List<String> pos_matches = new ArrayList<String>();
 							
 							Matcher matcher = Pattern.compile(pam_regex).matcher(seq);

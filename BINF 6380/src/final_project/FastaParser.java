@@ -20,9 +20,6 @@ import java.io.File;
 
 
 public class FastaParser {
-
-//	you can change the path and file name to what you want here, make sure you add the extension to the filename
-	private static final String filepath = "/Users/erintsigh/Desktop/NC_000913.fa"; 
 	
 	public String header;
 	public String sequence;
@@ -30,6 +27,8 @@ public class FastaParser {
 	public String match;
 	public int pam_pos;
 	public String pam_reg;
+	
+	private static File file_path;
 	
 	private List<FastaParser> pam_group;
 	
@@ -83,14 +82,14 @@ public class FastaParser {
 		this.pam_pos = pam_pos;
 	}
 //	returns the number of G's and C's divided by the length of this sequence
-	public float getGCRatio()
+	public static float getGCRatio(String seq)
 	{
 		float num_GCs = 0;
-		float seq_length = sequence.length();
+		float seq_length = seq.length();
 		
 		for(int i = 0; i < seq_length; i++)
 		{
-			char nucleotide = sequence.charAt(i);
+			char nucleotide = seq.charAt(i);
 			if(nucleotide == 'G' || nucleotide == 'C')
 			{
 				num_GCs++;
@@ -128,11 +127,11 @@ public class FastaParser {
 		
 		//if(matcher.find())
 		//{
-			while(matcher.find())
-			{
-				pam_matches.add(matcher.group());
-				//pam_pos.add(String.valueOf(pam_match.start()+1));
-			}
+		while(matcher.find())
+		{
+			pam_matches.add(matcher.group());
+			//pam_pos.add(String.valueOf(pam_match.start()+1));
+		}
 
 		//}
 		//else
@@ -178,9 +177,9 @@ public class FastaParser {
 
 	
 //	this static list reads in the file and returns a list with the header and sequence  
-	public static List<FastaParser> readFastaFile(String filepath) throws Exception
+	public static List<FastaParser> readFastaFile(File file_path) throws Exception
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
+		BufferedReader reader = new BufferedReader(new FileReader((file_path)));
 		
 		List<FastaParser> fs = new ArrayList<FastaParser>();
 		heads = new ArrayList<String>();
@@ -219,9 +218,11 @@ public class FastaParser {
 	
 	}
 	
-	public static List<String> getHeads(String filepath) throws Exception
+	public static List<String> getHeads(File file_path) throws Exception
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
+		BufferedReader reader = new BufferedReader(new FileReader(file_path));
+		
+		System.out.println(file_path);
 		
 		heads = new ArrayList<String>();
 		seqs = new ArrayList<String>();
@@ -251,9 +252,9 @@ public class FastaParser {
 		return heads;
 	}
 	
-	public static List<String> getSeqs(String filepath) throws Exception
+	public static List<String> getSeqs(File file_path) throws Exception
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(new File(FastaParser.filepath)));
+		BufferedReader reader = new BufferedReader(new FileReader(file_path));
 		
 		heads = new ArrayList<String>();
 		seqs = new ArrayList<String>();
@@ -290,7 +291,8 @@ public class FastaParser {
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(inFile)));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outFile)));
-		List<FastaParser> fastaList = FastaParser.readFastaFile(filepath);
+		File file_path = null;
+		List<FastaParser> fastaList = FastaParser.readFastaFile(file_path);
 		HashMap<String, String> fastaMap = new HashMap<String, String>();
 		Map<String, Integer> numberMap = new HashMap<String, Integer>();
 		

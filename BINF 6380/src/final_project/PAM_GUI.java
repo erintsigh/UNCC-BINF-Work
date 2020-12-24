@@ -1,7 +1,6 @@
 package final_project;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -17,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,13 +33,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import final_project.FastaParser;
 
+import final_project.FastaParser;
 
 public class PAM_GUI extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	private static final String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
+	//private static final String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
 	
 	private List<FastaParser> fastaList;
 	//private List<FastaParser> pam_group;
@@ -110,7 +110,7 @@ public class PAM_GUI extends JFrame
 		JLabel fasta_label = new JLabel("Select a FASTA file");
 		fasta_panel.add(fasta_label);
 		fasta_panel.add(open_button);
-		open_button.addActionListener(e -> {
+		open_button.addActionListener(e->{
 			pickFile();
 		});
 
@@ -165,6 +165,7 @@ public class PAM_GUI extends JFrame
 		panel.add(scrolly, BorderLayout.CENTER);
 		panel.add(bottom_panel, BorderLayout.SOUTH);
 		
+		
 		newrun_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -197,6 +198,7 @@ public class PAM_GUI extends JFrame
 		bottom_panel.setLayout(new GridLayout(0,3));
 		bottom_panel.add(export_button);
 		bottom_panel.add(new_button);
+
 		bottom_panel.add(exit);
 		
 		panel.setLayout(new BorderLayout());
@@ -233,24 +235,26 @@ public class PAM_GUI extends JFrame
 		return panel;
 	}
 	
-	public void pickFile()
+	private void pickFile()
 	{
-		
-		JFileChooser file_chooser = new JFileChooser();
-		file_chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		int result = file_chooser.showOpenDialog(this);
-		if(result == JFileChooser.APPROVE_OPTION)
-		{
-			selected_file = file_chooser.getSelectedFile();
-		}
-		else
-		{
-			CardLayout c = (CardLayout)(cards.getLayout());
-			c.show(cards, "start");
-		}
-		
-		file_path = selected_file.getAbsoluteFile();
+
+			JFileChooser file_chooser = new JFileChooser();
+			file_chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+			int result = file_chooser.showOpenDialog(this);
+			
+			if(file_chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+			{
+				file_path = file_chooser.getSelectedFile();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "File Access Cancelled. ");
+				CardLayout c = (CardLayout)(cards.getLayout());
+				c.show(cards, "start");
+			}
+			
 	}
+	
 	
 	//Class that closes the window and stops the run. 
 	private class CloseWindow implements ActionListener
@@ -279,7 +283,7 @@ public class PAM_GUI extends JFrame
 				//System.out.println(pam_enter);
 				//System.out.println(pam_regex);
 				int len_pam = pam_enter.length();
-				String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
+				//String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
 				List<String> seqs = new ArrayList<String>(); 
 				List<String> heads = new ArrayList<String>(); 
 
@@ -289,19 +293,20 @@ public class PAM_GUI extends JFrame
 					found_display.append("Finding PAM sites with: " + pam_enter + "\n\n");
 					found_disp.append("Finding PAM sites with: " + pam_enter + "\n\n");
 
-				heads = FastaParser.getHeads(filepath);
-				seqs = FastaParser.getSeqs(filepath);
-
-				//System.out.println(seq_size);
-				//System.out.println(heads.size());
-				//System.out.println(seqs.size());
+					heads = FastaParser.getHeads(file_path);
+					seqs = FastaParser.getSeqs(file_path);				
+				
 				
 					for(int i = 0; i < 1; i++)
 					{
 						found_display.append((heads.get(i)) + "\n");
 						found_disp.append((heads.get(i)) + "\n");
-						found_display.append(seqs.get(i) + "\n\n");
-						found_disp.append(seqs.get(i) + "\n\n");
+						found_display.append(seqs.get(i) + "\n");
+						found_disp.append(seqs.get(i) + "\n");
+						float gc_ratio = FastaParser.getGCRatio(seqs.get(i));
+						String GC_rat = String.valueOf(gc_ratio);
+						found_display.append("GC Ratio of Seq: " + GC_rat + "\n\n");
+						found_disp.append("GC Ratio of Seq: " + GC_rat + "\n\n");
 						int pam_list_size = ((FastaParser.getPAMs(pam_regex,seqs.get(i)).size()));
 						
 						for(int ii=0; ii < (pam_list_size); ii++)
@@ -412,8 +417,8 @@ public class PAM_GUI extends JFrame
 				
 				String pam_enter = (pam_user.getText()).toUpperCase();
 				String pam_regex = FastaParser.getPAMregex(pam_enter);
-				int len_pam = pam_enter.length();
-				String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
+				//int len_pam = pam_enter.length();
+				//String filepath = "/Users/erintsigh/Desktop/NC_000913.fa";
 				List<String> seqs = new ArrayList<String>(); 
 				List<String> heads = new ArrayList<String>(); 
 				String seq = new String();
@@ -421,8 +426,8 @@ public class PAM_GUI extends JFrame
 				String pam_found = new String();
 				String pos_found = new String();
 				
-				heads = FastaParser.getHeads(filepath);
-				seqs = FastaParser.getSeqs(filepath);
+				heads = FastaParser.getHeads(file_path);
+				seqs = FastaParser.getSeqs(file_path);
 				
 				writer.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO" + "\n");
 				for(int i = 0; i < 1; i++)
@@ -473,70 +478,6 @@ public class PAM_GUI extends JFrame
 	public static void main(String[] args) throws Exception
 	{
 		new PAM_GUI();
-		String pam;
-		String pos;
-		String pamsite_new = "NGG";
-		String pam_regex = FastaParser.getPAMregex(pamsite_new);
-		
-		String filepath = "/Users/erintsigh/git/UNCC-BINF-Work/BINF 6380/src/Mdomestica_short.fasta";
-		//System.out.println(file_path);
-		List<FastaParser> fastaList = FastaParser.readFastaFile(filepath);
-		
-		/*
-		for(FastaParser fs: fastaList)
-		{
-			//List<FastaParser> pamList = FastaParser.getPAMs(pam_regex, seq);
-			System.out.println(fs);
-			System.out.println(fs.getHeader());
-			System.out.println(fs.getSequence());
-			System.out.println("GC content: " + fs.getGCRatio());
-			System.out.println((fs.getPAMpos(pam_regex)).size());
-			System.out.println((fs.getPAMpos(pam_regex)));
-			//System.out.println((fs.getPAMs(pam_regex)).size());
-			//System.out.println((fs.getPAMs(pam_regex)));
-			String head = fs.getHeader();
-			String seq = fs.getSequence();
-			
-			System.out.println(head + ": " + seq);
-			
-			List<String> pam_matches = new ArrayList<String>();
-			List<String> pos_matches = new ArrayList<String>();
-			
-			Matcher matcher = Pattern.compile(pam_regex).matcher(seq);
-			
-			if(matcher.find())
-			{
-				while(matcher.find())
-				{
-					pam_matches.add(matcher.group());
-					pos_matches.add(String.valueOf(matcher.start()+1));
-				}
-			}
-			else
-			{
-				pam_matches.add("NOTHING FOUND");
-				pos_matches.add("NOTHING FOUND");
-			}
-			
-			for(int i=0; i<pam_matches.size(); i++)
-			{
-				System.out.println("PAM found " + pam_matches.get(i) + "\n");
-				System.out.println("pos: " + pos_matches.get(i) + "\n\n");
-			}
-
-				//for(int i=0; i < (fs.getPAMpos(pam_regex)).size(); i++)
-				//{
-	
-					//System.out.println("PAM found: " + (fs.getPAMs(pam_regex).get(i)) + "\n");
-				//	System.out.println("PAM position found: " + (fs.getPAMpos(pam_regex).get(i)) + "\n");
-						
-	
-					
-				//}
-			//}
-			
-		}*/
-		
 
 		
 		//calls method for writeUnique, write the path for output file and what to call the output file.

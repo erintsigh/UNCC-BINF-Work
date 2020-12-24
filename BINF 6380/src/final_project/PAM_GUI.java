@@ -68,12 +68,15 @@ public class PAM_GUI extends JFrame
 	private final JScrollPane scroll_window = new JScrollPane(found_display);
 	private final JScrollPane scrolly = new JScrollPane(found_disp);
 	
-	private String pam_enter;
-	private volatile long count = 0;
-	private volatile long endNum = 0;
-	private volatile int digit = 0;
-	private volatile boolean cancel = false;
 	
+	////TO KNOW:
+	////run may fail if the file is too large or if there are too many pam sites
+	////if there are a lot of pam sites found, it will take a few minutes to load on the start page
+	////start button will be highlighted/clicked until the run is finished.
+	////I have provided an NC fasta file in git for running through this GUI, if needed.
+	
+	
+	//holds all the gui pages 
 	public PAM_GUI() throws Exception
 	{
 		super("CRISPR PAM Finder");
@@ -92,6 +95,7 @@ public class PAM_GUI extends JFrame
 		
 	}
 	
+	//start card panel
 	private JPanel startPanel() throws Exception
 	{
 		JPanel panel = new JPanel();
@@ -110,6 +114,8 @@ public class PAM_GUI extends JFrame
 		JLabel fasta_label = new JLabel("Select a FASTA file");
 		fasta_panel.add(fasta_label);
 		fasta_panel.add(open_button);
+		
+		//select file method by action listener
 		open_button.addActionListener(e->{
 			pickFile();
 		});
@@ -131,15 +137,18 @@ public class PAM_GUI extends JFrame
 		panel.add(mid_panel, BorderLayout.CENTER);
 		panel.add(bottom_panel, BorderLayout.SOUTH);
 		
+		//exits window
 		exit_button.addActionListener(new CloseWindow());
 		
+		
+		//starts the pam site finding action
 		start_button.addActionListener(new startWork());
 		
 		return panel;
 	}
 	
 	
-	
+	//export panel, where you can export the found pam sites to a vcf file of your choosing
 	private JPanel exportPanel()
 	{
 		JPanel panel = new JPanel();
@@ -166,6 +175,7 @@ public class PAM_GUI extends JFrame
 		panel.add(bottom_panel, BorderLayout.SOUTH);
 		
 		
+		//action listener for new run button and goes back to start page
 		newrun_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -181,13 +191,17 @@ public class PAM_GUI extends JFrame
 			}
 		});
 		
+		//action listener to export button and runs the exporting to file mechanism
 		export_btn.addActionListener(new exportResults());
 		
+		//action listener for closing the entire window
 		exit_btn.addActionListener(new CloseWindow());
 		
 		return panel;
 	}
 	
+	
+	//results panel has the scroll window of the results (found pam sites)
 	private JPanel resultsPanel()
 	{
 		JPanel panel = new JPanel();
@@ -205,6 +219,7 @@ public class PAM_GUI extends JFrame
 		panel.add(scroll_window);
 		panel.add(bottom_panel, BorderLayout.SOUTH);
 		
+		//action listener for the export button that goes to the exporting vcf page/card
 		export_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -216,6 +231,7 @@ public class PAM_GUI extends JFrame
 			}
 		});
 		
+		//new button's action listener to go back to the start page and resets.
 		new_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -235,6 +251,8 @@ public class PAM_GUI extends JFrame
 		return panel;
 	}
 	
+	
+	//method for using filechooser to open up a fasta file for getting pam sites
 	private void pickFile()
 	{
 
@@ -256,7 +274,7 @@ public class PAM_GUI extends JFrame
 	}
 	
 	
-	//Class that closes the window and stops the run. 
+	//action listener that closes the window and stops the run. 
 	private class CloseWindow implements ActionListener
 	{
 		@Override
@@ -267,6 +285,7 @@ public class PAM_GUI extends JFrame
 	}
 	
 	
+	//action listener for start button on start page, initiates pam site finding 
 	private class startWork implements ActionListener
 	{
 		@Override
@@ -288,6 +307,7 @@ public class PAM_GUI extends JFrame
 				List<String> heads = new ArrayList<String>(); 
 
 				
+				//if length of the pam site user entered is within 2-7 bp long then it'll run the pam site find
 				if(len_pam > 1 && len_pam <8)
 				{
 					found_display.append("Finding PAM sites with: " + pam_enter + "\n\n");
@@ -296,7 +316,11 @@ public class PAM_GUI extends JFrame
 					heads = FastaParser.getHeads(file_path);
 					seqs = FastaParser.getSeqs(file_path);				
 				
-				
+					
+					//iterates through the sequence/header list and appends to a display panel that goes into a jscroller
+					//iterates through the pam site/position lists and appends to that display panel
+					//so will give you pams found per sequence/header in your fasta file.
+					//GC ratio will also be printed onto scrollpane per header/sequence
 					for(int i = 0; i < 1; i++)
 					{
 						found_display.append((heads.get(i)) + "\n");
@@ -325,6 +349,9 @@ public class PAM_GUI extends JFrame
 
 					
 				}
+				
+				//if the user's pam length is not of correct sizing, it'll restart the panel/card 
+				//and display a joptionpane error message
 				else
 				{
 					JOptionPane.showMessageDialog(null, ("ERROR. You must enter a PAM site between 2-7bps."));
@@ -334,6 +361,8 @@ public class PAM_GUI extends JFrame
 				}
 			
 			}
+			
+			//if any errors are caught it restarts the card/panel
 			catch(Exception ex)
 			{
 				pam_user.setText("");
@@ -344,6 +373,8 @@ public class PAM_GUI extends JFrame
 			
 		}
 	}
+	
+	//panel not implemented
 	/*
 	private JPanel progressPanel()
 	{
@@ -383,6 +414,11 @@ public class PAM_GUI extends JFrame
 		return panel;
 	}*/
 	
+	
+	//action listener for exported the results to an output file using jfilechooser 
+	//to a location/name of your choosing
+	//does not include .vcf extension, need to include that yourself.
+	//then writes out the file using buffered writer
 	private class exportResults implements ActionListener
 	{
 		@Override
@@ -411,6 +447,8 @@ public class PAM_GUI extends JFrame
 				}
 			}
 			
+			
+			//writes out to a file of the PAM sites and their positions found to a VCF file
 			try
 			{
 				BufferedWriter writer = new BufferedWriter(new FileWriter(chosenFile));
@@ -449,6 +487,8 @@ public class PAM_GUI extends JFrame
 				
 				writer.flush();
 				writer.close();
+				
+				//goes back to the same page/card it was on 
 				CardLayout c = (CardLayout)(cards.getLayout());
 				c.show(cards, "export");
 				start_button.setEnabled(true);
@@ -475,6 +515,8 @@ public class PAM_GUI extends JFrame
 		}
 	}
 	
+	
+	//main method where PAM_GUI is called to.
 	public static void main(String[] args) throws Exception
 	{
 		new PAM_GUI();

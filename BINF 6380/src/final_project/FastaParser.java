@@ -35,30 +35,35 @@ public class FastaParser {
 	private static List<String> pam_matches = new ArrayList<String>();
 	private static List<String> pos_matches = new ArrayList<String>();
 	
+	
+	//symbol is the nucleic acid notation
+	//for more info: https://en.wikipedia.org/wiki/Nucleic_acid_notation
+	//nuc_reps is what the symbols represent in REGEX format
 	public static ArrayList<String> symbol = new ArrayList<String>(Arrays.asList("A","T","G","C","W","S","M","K","R","Y","B","D","H","V","N"));
 	public static ArrayList<String> nuc_reps = new ArrayList<String>(Arrays.asList("A", "T", "G", "C", "[AT]", "[CG]", "[AC]", "[GT]", "[AG]", "[CT]", "[CGT]", "[AGT]", "[ACT]", "[ACG]", "[ACGT]"));
 
 	private static List<String> heads;
-
 	private static List<String> seqs;
-
 	//private List<String> PAM_seqs = new ArrayList<String>();
 	
-//	returns the header of the sequence without the ">"
+	
+	
+	//returns the header of the sequence without the ">"
 	public String getHeader()
 	{
 		header = (header.substring(1).split(" ")[0]);
-//	the line above or below do the same thing. Either works for future reference.
-//		header = header.replace('>', ' ').strip();
+		//line above or below do the same thing. Either works for future reference.
+		//header = header.replace('>', ' ').strip();
 		return header;
 	}
 	
-//	returns the DNA sequence of this FastaParser
+	
+	//returns the DNA sequence of this FastaParser
 	public String getSequence()
 	{
 		return sequence;
 	}
-
+	
 	public String getPAM()
 	{	
 		return match;
@@ -81,7 +86,9 @@ public class FastaParser {
 		this.match = match;
 		this.pam_pos = pam_pos;
 	}
-//	returns the number of G's and C's divided by the length of this sequence
+	
+	
+	//returns the number of G's and C's divided by the length of this sequence
 	public static float getGCRatio(String seq)
 	{
 		float num_GCs = 0;
@@ -98,6 +105,8 @@ public class FastaParser {
 		return (num_GCs/seq_length);
 	}
 	
+	
+	//translates the user's pam site string into a REGEX string	
 	public static String getPAMregex(String pam_seq)
 	{
 		String pamsite_re = new String();
@@ -115,6 +124,8 @@ public class FastaParser {
 	
 	
 	
+	//this will output a list of the found pam sites from regex translated pam, needs a sequence input as well
+	//returns a list of found PAM sites
 	public static List<String> getPAMs(String pam_reg, String sequence)
 	{
 		Matcher matcher = Pattern.compile(pam_reg).matcher(sequence);
@@ -143,6 +154,8 @@ public class FastaParser {
 	}
 	
 
+	//returns list of the PAM site locations/positions on the string of DNA(sequence)
+	//using the same method as above with regex matcher
 	public static List<String> getPAMpos(String pam_reg, String sequence)
 	{
 		Matcher matcher = Pattern.compile(pam_reg).matcher(sequence);
@@ -155,13 +168,7 @@ public class FastaParser {
 		return pos_matches;
 	}
 	
-	/*
-	public String getPAM(String pam_reg, String seq)
-	{
-		String pam_match = String.valueOf(Pattern.compile(pam_reg).matcher(seq));
-		return pam_match;
-	}
-	
+	/*	
 	public int getPamPos(String pam_reg, String seq)
 	{
 		Matcher pam_match = Pattern.compile(pam_reg).matcher(seq);
@@ -176,7 +183,7 @@ public class FastaParser {
 	*/
 
 	
-//	this static list reads in the file and returns a list with the header and sequence  
+	//this static list reads in the file and returns a list with the header and sequence  
 	public static List<FastaParser> readFastaFile(File file_path) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new FileReader((file_path)));
@@ -218,6 +225,7 @@ public class FastaParser {
 	
 	}
 	
+	//this returns a static list of just the headers from the fasta file
 	public static List<String> getHeads(File file_path) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(file_path));
@@ -252,6 +260,8 @@ public class FastaParser {
 		return heads;
 	}
 	
+	
+	//this returns a list of sequences from the fasta file
 	public static List<String> getSeqs(File file_path) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(file_path));
@@ -262,9 +272,9 @@ public class FastaParser {
 		String header = "";
 		StringBuffer sequence = new StringBuffer();
 		
-//		iterating over every line to read in, if the line starts with a ">" then, it moves onto the next if statement
-//		the next if statement says if the counter doesn't equal 0, then write out the name, nucleotide %'s, and sequence to the txt file
-//		the counter adds 1 each time the for loop iterates.
+		//iterating over every line to read in, if the line starts with a ">" then, it moves onto the next if statement
+		//the next if statement says if the counter doesn't equal 0, then write out the name, nucleotide %'s, and sequence to the txt file
+		//the counter adds 1 each time the for loop iterates.
 		for(String nextLine = reader.readLine(); nextLine != null; nextLine = reader.readLine())
 		{
 			if(nextLine.startsWith(">"))
@@ -285,8 +295,11 @@ public class FastaParser {
 	}
 
 	
-//	this method writes each unique sequence to the output file with the # of times each sequence was 
-//	seen in the input file as the header (sorted with the sequence seen the fewest times the first)
+	
+	//this method is not implemented into the GUI
+	//this method writes each unique sequence to the output file with the # of times each sequence was 
+	//seen in the input file as the header (sorted with the sequence seen the fewest times the first)
+	
 	public static void writeUnique(String inFile, String outFile) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(inFile)));
@@ -303,29 +316,29 @@ public class FastaParser {
 
 		Collection<String> fastaValues = fastaMap.values();
 
-//		for every value in the collection fasta values (the value is the sequence) add into the hashmap numberMap the 
-//		sequence (old value) and make the new value the frequency of each sequence. So each sequence that exists in the file has 
+		//		for every value in the collection fasta values (the value is the sequence) add into the hashmap numberMap the 
+		//		sequence (old value) and make the new value the frequency of each sequence. So each sequence that exists in the file has 
 		for(String value : fastaValues)
 		{
 			numberMap.put(value,(Collections.frequency(fastaValues, value)));
 		}
 	
-//		this section of code sorts the numberMap with the frequency of unique sequences by ascending
-//		i referenced this website to get this part of the code: https://www.javatpoint.com/how-to-sort-hashmap-by-value
+		//		this section of code sorts the numberMap with the frequency of unique sequences by ascending
+		//		i referenced this website to get this part of the code: https://www.javatpoint.com/how-to-sort-hashmap-by-value
 		
 		List<Entry<String,Integer>> origList = new LinkedList<Entry<String, Integer>>(numberMap.entrySet());
 		
 		Collections.sort(origList, new Comparator<Entry<String, Integer>>()
 				{
-//		it sorts by comparing the first entry's integer value with the second entry's integer value only. 
-//		It returns whichever is smaller until no values to compare.
+			//		it sorts by comparing the first entry's integer value with the second entry's integer value only. 
+			//		It returns whichever is smaller until no values to compare.
 					public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
 						return o1.getValue().compareTo(o2.getValue());
 					}
 					
 				});
 		
-//		creates a new linked hashmap, then iterates over each entry in the list to put them back into a hashmap.
+		//		creates a new linked hashmap, then iterates over each entry in the list to put them back into a hashmap.
 		Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
 		
 		for(Entry<String, Integer> entry:origList)
@@ -333,7 +346,7 @@ public class FastaParser {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 		
-//		print and write the hashmap per entry
+		//		print and write the hashmap per entry
 		for(String key: sortedMap.keySet())
 		{
 			writer.write(">" + key + "\n" + sortedMap.get(key) + "\n");

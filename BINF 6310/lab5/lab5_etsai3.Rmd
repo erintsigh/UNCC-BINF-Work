@@ -1,0 +1,106 @@
+---
+title: "Lab 5 - BINF 6310"
+author: "Erin Tsai"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1: 
+##### We will utilize our RNA seq dataset of E. Coli genes from mice. The URL is here: http://afodor.github.io/classes/stats2015/longitdunalRNASeqData.zip 
+##### Read and Normalize the counts table(“nc101_scaff_dataCounts.txt “ into R). 
+
+###### (The first 3 columns are “day 2”, the next 3 columns are “week 12” and the last 5 are “week 18”).  Remember, that day 2 is before the mice have inflammation symptoms, week 12 is associated with inflammation and week 18 is associated with cancer.
+
+```{r}
+myT = read.table(file = "longitdunalRNASeqData/nc101_scaff_dataCounts.txt", sep = "\t", header = TRUE, row.names = 1)
+
+#remove rare genes
+myT = myT[apply(myT, 1, median) > 5,]
+
+myTNorm = myT
+for(i in 1:ncol(myT)){
+  colSum = sum(myT[,i])
+  myTNorm[,i] = myTNorm[,i]/colSum
+}
+```
+
+### Problem 2:
+##### For every row in the normalized spreadsheet, run three t-tests ("day 2" vs. "week 12", “day 2” vs. “week 18” and “week 12” vs. “week 18”).  At a p < .05 threshold fill in the following table:
+
+```{r}
+#genes significant at p < 0.05 uncorrected
+day2week12_pvals = vector()
+day2week12_unc = 0
+day2week18_pvals = vector()
+day2week18_unc = 0
+week12week18_pvals = vector()
+week12week18_unc = 0
+
+for (i in 1:nrow(myTNorm)){
+  day2 = myTNorm[i,1:3]
+  week12 = myTNorm[i,4:6]
+  week18 = myTNorm[i,7:11]
+  day2week12_pvals[i] = t.test(day2,week12,var.equal = FALSE)$p.value
+  if(day2week12_pvals[i] <= 0.05){
+    day2week12_unc = day2week12_unc + 1
+  }
+  
+  day2week18_pvals[i] = t.test(day2,week18,var.equal = FALSE)$p.value
+  if(day2week18_pvals[i] <= 0.05){
+    day2week18_unc = day2week18_unc + 1
+  }
+  
+  week12week18_pvals[i] = t.test(week12,week18,var.equal = FALSE)$p.value
+  if(week12week18_pvals[i] <= 0.05){
+    week12week18_unc = week12week18_unc + 1
+  }
+}
+unc_pval_counts = c(day2week12_unc, day2week18_unc, week12week18_unc)
+
+#genes significant at p < 0.05 FDR corrected pvals
+d2w12_fdr_cor = sum(p.adjust(day2week12_pvals, 'BH') < 0.05)
+d2w18_fdr_cor = sum(p.adjust(day2week18_pvals, 'BH') < 0.05) 
+w12w18_fdr_cor = sum(p.adjust(week12week18_pvals, 'BH') < 0.05)
+cor_fdr_counts = c(d2w12_fdr_cor, d2w18_fdr_cor, w12w18_fdr_cor)
+
+#Bonferroni corrected
+d2w12_bon_correct = sum(p.adjust(day2week12_pvals, "bonferroni") <= 0.05)
+d2w18_bon_correct = sum(p.adjust(day2week18_pvals, "bonferroni") <= 0.05)
+w12w18_bon_correct = sum(p.adjust(week12week18_pvals, "bonferroni") <= 0.05)
+cor_bon_counts = c(d2w12_bon_correct, d2w18_bon_correct, w12w18_bon_correct)
+
+#Full table results
+full_table_counts = data.frame(unc_pval_counts, cor_fdr_counts, cor_bon_counts)
+rownames(full_table_counts) = c("Day2 v. Week12", "Day2 v. Week18", "Week12 v. Week18")
+colnames(full_table_counts) = c("Genes with p < 0.05 uncorrected", "Genes with p <0.05 BH FDR corrected", "Genes with p <0.05 Bonferroni corrected")
+
+full_table_counts
+```
+
+### Problem 3:
+##### Make histograms of all the uncorrected p-values for each of the three campanions. Are any of the distributions uniform?
+
+```{r}
+hist_d2w12 = hist(day2week12_pvals, main = "Day2 v. Week12")
+hist_d2w18 = hist(day2week18_pvals, main = "Day2 v. Week18")
+hist_w12w18 = hist(week12week18_pvals, main = "Week12 v. Week1")
+```
+
+* None of the histograms have a uniform distribution.
+
+
+### Problem 4:
+##### Based on these data, when is the biggest shift in the transcriptome? Which samples are most different from one another?
+
+```{r}
+sum(hist_d2w12$counts[1:2])
+sum(hist_d2w18$counts[1:2])
+sum(hist_w12w18$counts[1:2])
+```
+* It seems that the biggest shift in transcriptome is from day 2 vs. week 18.
+* The sample that seems to be the most different from one another is the day 2 vs. week 18 sample.
+
+

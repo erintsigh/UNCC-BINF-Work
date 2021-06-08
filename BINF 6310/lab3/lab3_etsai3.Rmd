@@ -1,0 +1,190 @@
+---
+title: "Lab 3 - BINF 6310"
+author: "Erin Tsai"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1
+##### 1. You walk into the "occasionally dishonest casino" with prior probabilities and likelihoods set to the values in slides 21-25 of lecture #4 (a "loaded" die has a 10% chance of getting a 1-5 and a 50% chance of getting a 6, but 99% of the dice are fair).
+```{r}
+likely_givenLoaded <- c( 0.1,0.1,0.1,0.1,0.1,0.5)
+likely_givenNotLoaded<- c(1/6,1/6,1/6,1/6,1/6,1/6)
+prob_ofLoaded <-  c(0.01,0.99)
+```
+
+##### You pick up one die and with it roll:
+```{r}
+data<-c(2,3,2,6,3,5,6,2,6,6,2,6,6,2,3,6,6,6,5,6,6,5,6,6,6,6,6,4,6,3,3,3,6,6,5,6,6)
+data
+```
+
+
+##### Make a graph of the posterior probability that you have picked up a loaded die as a function of the number of times you have rolled the die. (Show your code.)
+
+```{r}
+prob_loadedRolls <- vector();
+titleStr <- ""
+for( i in 1:length(data))
+{
+  prob_loadedRolls[i] <- prob_ofLoaded[1];
+  
+  denom <- prob_ofLoaded[1] * likely_givenLoaded[data[i]] + prob_ofLoaded[2] * likely_givenNotLoaded[data[i]];
+  prob_ofLoaded[1] <- prob_ofLoaded[1] * likely_givenLoaded[data[i]] / denom;
+  prob_ofLoaded[2] = prob_ofLoaded[2] * likely_givenNotLoaded[data[i]] / denom
+  
+  titleStr <- paste(titleStr,data[i],sep="")
+}
+plot(1:i,prob_loadedRolls, main = titleStr,ylim=c(0,1),xlim=c(1,length(data)+1))
+```
+
+
+##### 2. How many times on average would you need to roll a loaded die to be 99.999% sure that it was loaded? (Show your work.)
+```{r}
+number_ofRolls <- vector();
+
+for (i in 1:50){
+  c <- 0 
+  prob_ofLoaded <-  c(0.01,0.99)  
+  while (TRUE){
+    x <- sample(c(1:6),size=1,replace = TRUE,prob = c(0.1,0.1,0.1,0.1,0.1,0.5)); 
+  
+    denom <- prob_ofLoaded[1] * likely_givenLoaded[x] + prob_ofLoaded[2] * likely_givenNotLoaded[x]; 
+    prob_ofLoaded[1] = prob_ofLoaded[1] * likely_givenLoaded[x] / denom;
+    prob_ofLoaded[2] = prob_ofLoaded[2] * likely_givenNotLoaded[x] / denom;
+    c <- c+1
+  
+    if (prob_ofLoaded[1] >= 0.99999){
+      number_ofRolls[i] <- c 
+      break
+    }
+  }
+}
+
+mean_rolls = mean(number_ofRolls)
+```
+* The average number of rolls required is  **`r mean_rolls`**.
+
+
+### Problem 2
+##### You are consulting for a hospital. They have a diagnostic test for a disease with a known background prevalence of 0.1%.
+
+##### The test has the following properties:
+##### p(positive result | person has disease) = 0.91
+##### p(negative result | person does not have disease) = 0.84
+
+##### The cost of running the test one time is $1. The test can be repeated for each patient and the results of the test are independent of one another allowing for Bayesian updates. The test always yields a positive or negative result.
+##### The requirement of the hospital is that the test is repeated for each patient until a Bayesian posterior of at least 0.99999 is reached.
+
+##### 1. Run simulations for a patient with the disease. About how many times on average must the test be repeated to achieve the hospital's requirements?
+
+```{r}
+prob_hasDisease = c(0.001, 0.999)
+pos_testDisease = c(0.91, 0.09)
+pos_testNoDisease = c(0.16, 0.84)
+num_tests_pos_res = 0
+
+for(i in 1:10000){
+  res = ((pos_testDisease[1] ** i) * prob_hasDisease[1])/(((pos_testDisease[1] ** i) * prob_hasDisease[1]) + ((pos_testDisease[2] ** i) * prob_hasDisease[2]))
+  
+  if(res > 0.9999){
+    num_tests_pos_res = i
+    break
+  }
+  
+}
+
+```
+* **`r num_tests_pos_res`** tests are needed to achieve the hospital's requirements of 99% positive result.
+
+##### 2. Repeat the simulations for a patient without the disease. About how many times on average must the test be repeated to achieve the hospital's requirements?
+```{r}
+prob_hasDisease = c(0.001, 0.999)
+pos_testDisease = c(0.91, 0.09)
+pos_testNoDisease = c(0.16, 0.84)
+num_tests_neg_res = 0
+
+for(i in 1:10000){
+  res1 = ((pos_testNoDisease[1] ** i) * prob_hasDisease[1])/(((pos_testNoDisease[1] ** i) * prob_hasDisease[1]) + ((pos_testNoDisease[2] ** i) * prob_hasDisease[2]))
+  
+  if(res1 < 0.0001){
+    num_tests_neg_res = i
+    break
+  }
+}
+
+```
+
+* **`r num_tests_neg_res`** tests are needed to achieve the hospital's requirements of a 99% negative result.
+
+
+##### 3. The hospital plans to run the test on one million patients per year. At a cost of $1 per test, about how much should the hospital budget to run these test? (That is to say, for a million patients, how many tests can the hospital anticipate running?)
+```{r}
+patients = 1000000
+
+num_posTests = ((0.91*0.001) + (0.999*0.16)) * patients
+
+num_negTests = ((0.09*0.001) + (0.999*0.84)) * patients
+
+total_tests = (num_posTests * num_tests_pos_res) + (num_negTests * num_tests_neg_res)
+total_tests_nosci = format(total_tests, scientific = FALSE)
+```
+* The hospital needs to budget approximately $**`r total_tests_nosci`** to run these tests.
+
+### Problem 3
+##### Another manufacturer approaches the hospital with an improved, but more expensive test with the following properties:
+* p(positive result | person has disease) = 0.96
+* p(negative result | person does not have disease) = 0.95
+
+##### 1. With this test, how many times on average must the test be repeated to achieve the hospital's requirements for patients with and without the disease?
+
+```{r}
+prob_hasDisease = c(0.001, 0.999)
+pos_testDisease = c(0.96, 0.04)
+pos_testNoDisease = c(0.05, 0.95)
+num_tests_pos_res1 = 0
+num_tests_neg_res1 = 0
+
+for(i in 1:10000){
+  res2 = ((pos_testDisease[1] ** i) * prob_hasDisease[1])/(((pos_testDisease[1] ** i) * prob_hasDisease[1]) + ((pos_testDisease[2] ** i) * prob_hasDisease[2]))
+  
+  if(res2 > 0.9999){
+    num_tests_pos_res1 = i
+    break
+  }
+}
+
+for(i in 1:10000){
+  res3 = ((pos_testNoDisease[1] ** i) * prob_hasDisease[1])/(((pos_testNoDisease[1] ** i) * prob_hasDisease[1]) + ((pos_testNoDisease[2] ** i) * prob_hasDisease[2]))
+  
+  if(res3 < 0.0001){
+    num_tests_neg_res1 = i
+    break
+  }
+}
+```
+* On average, **`r num_tests_pos_res1`** tests are required to achieve the hospital's requirements for patients with the disease.
+* On average, **`r num_tests_neg_res1`** tests are required to achieve the hospital's requirements for patients without the disease.
+
+##### 2. Considering only the cost of the test and assuming the hospital will screen one million patients with a background prevalence of 0.1% at about what price point for running the test one time will the hospital save money by switching to the new test?
+
+```{r}
+patients = 1000000
+
+num_posTests_new = ((0.96*0.001) + (0.999*0.05)) * patients
+
+num_negTests_new = ((0.04*0.001) + (0.999*0.95)) * patients
+
+total_tests_new = (num_posTests_new * num_tests_pos_res1) + (num_negTests_new * num_tests_neg_res1)
+
+total_tests_new_nosci = format(total_tests_new, scientific = FALSE)
+
+total_saved_switch = total_tests/total_tests_new
+round_totalsaved = round(total_saved_switch, digits = 2)
+```
+* Running the new test, the hospital would only need to budget $**`r total_tests_new_nosci`**. 
+* While running the old test, the hospital would need to budget $**`r total_tests_nosci`**.
+* The hospital will save $**`r round_totalsaved`** per test by switching to the new test.

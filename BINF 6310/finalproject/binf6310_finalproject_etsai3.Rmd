@@ -1,0 +1,193 @@
+---
+title: "Analysis of COVID-19 Hospitalizations and Race"
+author: "Erin Tsai"
+date: "5/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Introduction
+Patients from certain demographic groups may be at higher risk for the coronavirus disease 2019 (COVID-19). The objective is to investigate if patients in a particular racial demographic are at an increased risk for COVID-19 infection compared to other racial demographics, specifically using hospitalization data from the CDC. And also to investigate if age is shown to have increased risk with increasing age. 
+
+### Methods
+The dataset was retrieved from the CDC's website: https://gis.cdc.gov/grasp/COVIDNet/COVID19_5.html
+The dataset was then cleaned to create a smaller and more relevant dataset. Then the different race groups were visualized to determine differences and similarities between them. Then a Shapiro test was run to determine the collective groups' normality. A Bartlett test was also run to determine if the group had similar variances. After determining that the dataset was not normal and had different variances, a Kruskal Wallis test was run to see if the mean rank of the 6 groups of races were statistically equal. The groups were then separated by race into their individual respective groups. A linear regression was run on each individual race group and then visualized. 
+
+### Results
+```{r, echo=FALSE}
+covid_race = read.table("COVID19Phase5Data/Characteristics_race2.csv", sep = ",", header = TRUE)
+covid_byage_race = split(covid_race, covid_race$Primary.Strata.Name)
+covid_white = covid_byage_race$White
+covid_black = covid_byage_race$Black
+covid_hisplat = covid_byage_race$`Hispanic/Latino`
+covid_aapi = covid_byage_race$`Asian/Pacific Islander`
+covid_amIn = covid_byage_race$`American Indian/Alaska Native`
+covid_other = covid_byage_race$Other
+```
+
+```{r}
+plot(covid_white$Age.Group, (covid_white$Percent), type = "b", xlab = "Age Groups", ylab = "% of Case Counts", ylim = c(0,60), pch = 19, main = "Different Race Groups % of COVID-19 Hospitalizations vs. Age")
+points(covid_black$Age.Group, (covid_black$Percent), col = "blue", pch = 19)
+points(covid_hisplat$Age.Group, (covid_hisplat$Percent), col = "green", type = "b", pch = 19)
+points(covid_aapi$Age.Group, (covid_aapi$Percent), col = "red", type = "b", pch = 19)
+points(covid_amIn$Age.Group, (covid_amIn$Percent), col = "lightblue", type = "b", pch = 19)
+points(covid_other$Age.Group, (covid_other$Percent), col = "purple", type = "b", pch = 19)
+legend("topleft", legend = c("White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Other"), col = c("black", "blue", "green", "red", "lightblue", "purple"), cex = 0.75, pch = 19)
+
+```
+
+####### Figure 1: Different race groups' % of covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+##### Shapiro and Bartlett Test
+```{r}
+groups_agerace = c(rep("White",5), rep("Black", 5), rep("HispLat", 5), rep("Asian", 5), rep("AmIn", 5), rep("Other", 5))
+counts_agerace = covid_race$count.pop
+b = bartlett.test(counts_agerace, groups_agerace)
+b_pval_agerace = b$p.value
+s = shapiro.test(counts_agerace)
+s_pval_agerace = s$p.value
+```
+
+The p-value for the Shapiro test, **`r s_pval_agerace`**,  is not greater than 0.05. This means we cannot assume normality, so we use a non-parametric test. The p-value for the Bartlett test, **`r b_pval_agerace`**, is less than 0.05. Meaning the variances were significantly different from each other. This means we can use the Kruskal Wallis test because our data is not normal and the variances were different between groups.
+
+##### Kruskal Wallis Test
+* H0: Means of counts of all races are equal.
+* Ha: Not all means of all races are equal.
+```{r}
+covid_counts = list(covid_white$count.pop, covid_black$count.pop, covid_hisplat$count.pop, covid_aapi$count.pop, covid_amIn$count.pop, covid_other$count.pop)
+covid_race_kw = kruskal.test(covid_counts)
+covid_race_kw_ts = covid_race_kw$statistic
+covid_race_kw_pval = covid_race_kw$p.value
+covid_race_critval = qchisq(0.95, 5)
+```
+The Kruskal Wallis chi-square test statistic, **`r covid_race_kw_ts`**, is greater than the critical value, **`r covid_race_critval`**. And the p-value from the Kruskal Wallis test, **`r covid_race_kw_pval`**, is less than 0.05. Therefore, we rejected the null hypothesis that the mean rank of the 6 groups of races are statistically equal. 
+
+##### Because we have rejected the null hypothesis that the mean rank of the 6 groups of races were statistically equal, we find there is a dependence of race on the means. So we then decouple race and just look at the linear regression of COVID-19 hospitalization counts based on age.
+
+```{r}
+w_shap = shapiro.test(covid_white$Count)$p.value
+b_shap = shapiro.test(covid_black$Count)$p.value
+h_shap = shapiro.test(covid_hisplat$Count)$p.value
+asn_shap = shapiro.test(covid_aapi$Count)$p.value
+ami_shap = shapiro.test(covid_amIn$Count)$p.value
+o_shap = shapiro.test(covid_other$Count)$p.value
+```
+* The p-values for the Shapiro tests of all of the races were all greater than 0.05 (**`r w_shap`**, **`r b_shap`**, **`r h_shap`**, **`r asn_shap`**, **`r ami_shap`**, **`r o_shap`**), meaning we can assume normality of each individual dataset. 
+
+##### Linear regression on all of the different race groups against age groups:
+```{r}
+lm_crit = qf(0.95,1,4)
+
+covid_white_Lm = lm(log(covid_white$Count)~covid_white$Age.Group, data = covid_white)
+w = summary(covid_white_Lm)
+w_pval_lm = anova(covid_white_Lm)$"Pr(>F"[1]
+w_lm_fstat = w$fstatistic[1]
+w_rsq_lm = w$r.squared[1]
+
+covid_black_Lm = lm(covid_black$Count~covid_black$Age.Group, data = covid_black)
+b = summary(covid_black_Lm)
+b_pval_lm = anova(covid_black_Lm)$"Pr(>F"[1]
+b_lm_fstat = b$fstatistic[1]
+b_rsq_lm = b$r.squared[1]
+
+covid_hisplat_Lm = lm(covid_hisplat$Count~covid_hisplat$Age.Group, data = covid_hisplat)
+h = summary(covid_hisplat_Lm)
+h_pval_lm = anova(covid_hisplat_Lm)$"Pr(>F"[1]
+h_lm_fstat = h$fstatistic[1]
+h_rsq_lm = h$r.squared[1]
+
+covid_aapi_Lm = lm(covid_aapi$Count~covid_aapi$Age.Group, data = covid_aapi)
+asn = summary(covid_aapi_Lm)
+asn_pval_lm = anova(covid_aapi_Lm)$"Pr(>F"[1]
+asn_lm_fstat = asn$fstatistic[1]
+asn_rsq_lm = asn$r.squared[1]
+
+covid_amIn_Lm = lm(covid_amIn$Count~covid_amIn$Age.Group, data = covid_amIn)
+ami = summary(covid_amIn_Lm)
+ami_pval_lm = anova(covid_amIn_Lm)$"Pr(>F"[1]
+ami_lm_fstat = ami$fstatistic[1]
+ami_rsq_lm = ami$r.squared[1]
+
+covid_other_Lm = lm(covid_other$Count~covid_other$Age.Group, data = covid_other)
+o = summary(covid_other_Lm)
+o_pval_lm = anova(covid_other_Lm)$"Pr(>F"[1]
+o_lm_fstat = o$fstatistic[1]
+o_rsq_lm = o$r.squared[1]
+```
+##### Linear regression results and visualization:
+
+```{r}
+plot(covid_white$Age.Group, log(covid_white$Count), xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of LOG-Transformed", "White COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16)
+abline(coef = coef(covid_white_Lm))
+legend("topleft", legend = c("R-square:", w_rsq_lm), cex = 0.75)
+```
+
+####### Figure 2: White covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+It was found that in Figure 1, the White dataset seemed to follow a logarithmic trend. After running the linear model, the White dataset's hospitalization counts had a stronger linear relationship with the age groupings after a log-transformation and a stronger r-square value. This can be seen in the above figure. None of the other race groups seem to follow this trend and were not transformed.
+
+* For the White race group, our test statistic was **`r w_lm_fstat`** which is larger than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r w_pval_lm`**, which is smaller than 0.05. This means we have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r w_rsq_lm`**, which is a strong, positive linear relationship. 
+
+```{r}
+plot(covid_black$Age.Group, covid_black$Count, xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of", "Black COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16, col = "blue")
+abline(coef = coef(covid_black_Lm), col = "blue")
+legend("topleft", legend = c("R-square:", b_rsq_lm), cex = 0.75)
+```
+
+####### Figure 3: Black covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+* For the Black race group, our test statistic was **`r b_lm_fstat`** which is larger than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r b_pval_lm`**, which is smaller than 0.05. This means we have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r b_rsq_lm`**, which is a strong, positive linear relationship.
+
+
+```{r}
+plot(covid_hisplat$Age.Group, covid_hisplat$Count, xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of", "Hispanic/Latino COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16, col = "green")
+abline(coef = coef(covid_black_Lm), col = "green")
+legend("topleft", legend = c("R-square:", h_rsq_lm), cex = 0.75)
+```
+
+####### Figure 4: Hispanic/Latino covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+* For the Hispanic/Latino race group, our test statistic was **`r h_lm_fstat`** which is smaller than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r h_pval_lm`**, which is larger than 0.05. This means we do not have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r h_rsq_lm`**, which is a very weak, postive linear relationship. 
+
+
+```{r}
+plot(covid_aapi$Age.Group, covid_aapi$Count, xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of", "Black COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16, col = "red")
+abline(coef = coef(covid_aapi_Lm), col = "red")
+legend("topleft", legend = c("R-square:", asn_rsq_lm), cex = 0.75)
+```
+
+####### Figure 5: Asian/Pacific Islander covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+* For the Asian/Pacific Islander race group, our test statistic was **`r asn_lm_fstat`** which is larger than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r asn_pval_lm`**, which is smaller than 0.05. This means we have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r asn_rsq_lm`**, which is a very strong, positive linear relationship.
+
+
+```{r}
+plot(covid_amIn$Age.Group, covid_amIn$Count, xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of American Indian/Alaskan Native", "COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16, col = "lightblue")
+abline(coef = coef(covid_amIn_Lm), col = "lightblue")
+legend("topleft", legend = c("R-square:", ami_rsq_lm), cex = 0.75)
+```
+
+####### Figure 6: American Indian/Alaskan Native covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+* For the American Indian/Alaskan Native race group, our test statistic was **`r ami_lm_fstat`** which is smaller than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r ami_pval_lm`**, which is larger than 0.05. This means we do not have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r ami_rsq_lm`**, which is a weak, positive linear relatinoship.
+
+
+```{r}
+plot(covid_other$Age.Group, covid_other$Count, xlab = "Age Groups", ylab = "COVID-19 Hospitalization Counts", main = c("Linear Model of", "Other Racial Groups' COVID-19 Hospitalizations in the U.S.", "Against Age"), pch=16, col = "purple")
+abline(coef = coef(covid_other_Lm), col = "purple")
+legend("topleft", legend = c("R-square:", o_rsq_lm), cex = 0.75)
+```
+
+####### Figure 7: Other race groups' covid-19 hospitalizations against age groups. Age groups are: 1 = 0-4 years, 2 = 5-17 years, 3 = 18-49 years, 4 = 50-64 years, 5 = 65+ years.
+
+* For the "Other" race group, our test statistic was **`r o_lm_fstat`** which is larger than our critical value of **`r lm_crit`**. The p-value for the linear model was **`r o_pval_lm`**, which is smaller than 0.05. This means we have enough evidence to reject the null hypothesis that there is no relationship between age groups and counts. The r-squared value was **`r o_rsq_lm`**, which is a strong, positive linear relationship.
+
+### Discussion
+After determining that the collective dataset was not normal and had different variances, a Kruskal Wallis test proved that the mean rank of the 6 groups of races were not statistically equal, we found that there was a dependence of race on the means. Race was then decoupled from the dataset to look at the linear regression of COVID-19 hospitalization counts based only on age. The groups were then separated by race into their individual respective groups. A linear regression was run on each individual race group and then visualized. The linear models displayed that only some of the racial groups had a linear relationship between age and COVID-19 hospitalization cases. The White race group, in particular, had displayed a logarithmic trend which was then proved by having a stronger relationship (determined by the r-squared value/correlation coefficient). The Hispanic/Latino and American Indian/Alaskan Native groups had very weak relationships between age and COVID-19 hospitalization cases. These two group would need to be further investigated to determine the reasoning behind their weak relationship. This could also be due to these race groups having a smaller percentage of patients compared to the other races and therefore lack of numbers. The other four groups (White, Black, Asian/Pacific Islander, and Other) all had a relatively strong relationship between age and COVID-19 hospitalization cases, with the strongest relationship shown from the White race group followed by the Asian/Pacific Islander group. In conclusion, it seems there is a dependency of race on COVID-19 hospitalization numbers. And that in particular racial groups there is a positive strong correlation between age and COVID-19 hospitalizations. Although, it does appear this is the case in all race demographics. 
+
+### Works Cited
+* Centers for Disease Control and Prevention. Fourth Report on Human Exposure to Environmental Chemicals, COVID-19 Data Tracker, (May 2021). Atlanta, GA: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. https://gis.cdc.gov/grasp/COVIDNet/COVID19_5.html
+

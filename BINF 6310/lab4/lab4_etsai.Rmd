@@ -1,0 +1,145 @@
+---
+title: "Lab 4 - BINF 6310"
+author: "Erin Tsai"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1
+##### 1A) Plot the prior graph for a situation for a coin where the prior belief for p(head) is represented by the following R code:
+* dexp(x, rate = 5) / 0.9932621
+
+##### For values of 0 <= x <= 1 and 0 otherwise. (We choose the denominator to make the integral between 0 and 1 sum to 1). 
+```{r}
+x = seq(0, 1, 0.01)
+graphFunction = function(x) (dexp(x, rate = 5)/0.9932621)
+plot(x, graphFunction(x))
+```
+
+
+##### 1B) Calculate the posterior graph with both the Metropolis algorithm and grid approximation for a case with 14 heads and 10 tails (where x = prob(head)). Show the two methods roughly agree. Compare these to a plot with a posterior for new data of 14 heads and 10 tails with a prior with beta(40,40). 
+###### (So for the observation of 14 heads and 10 tails you will end up with a graph with three plots superimposed: (i) the Metropolis algorithm with an exp prior, (ii) grid approximation with an exp prior and (iii) exact analytical solution from a beta(40,40) prior make the plots different colors so you can visualize them…)
+
+```{r}
+numIterations = 500000
+
+#metro calulations and plot
+piOld = 0.5
+posteriorDistribution = vector()
+
+for(i in 1:numIterations){
+  pOld = dbinom(14, 24, piOld) * (dexp(piOld, rate = 5)/0.9932621)
+  piNew = piOld + rnorm(1, 0, sd = 0.01)
+  
+  if(piNew > 1){
+    piNew = 1
+  }
+  
+  if(piNew < 0){
+    piNew = 0
+  }
+  
+  pNew = dbinom(14, 24, piNew) * (dexp(piNew, rate = 5)/0.9932621)
+  
+  ratio = pNew/pOld
+  
+  if(ratio > 1 || ratio >= runif(1)){
+    piOld = piNew
+  }
+  
+  posteriorDistribution[i] = piOld
+}
+
+myHist = hist(posteriorDistribution, breaks = 200, plot = FALSE)
+plot(myHist$mids, myHist$counts/i, ylim = c(0,0.05),main = paste("iteration", i), col = "blue")
+
+#grid calculation
+numBreaks = 1000
+posteriorDistributionGrid = vector(length = numBreaks)
+xVals = seq(0,1,1/numBreaks)
+i = 1
+sum = 0
+
+for(x in xVals){
+  posteriorDistributionGrid[i] = (dexp(x, rate = 5)/0.9932621) * dbinom(14, 24, x)
+  sum = sum + posteriorDistributionGrid[i]
+  i = i + 1
+}
+
+#beta plot with metro
+dbetasum = sum(dbeta(myHist$mids, 40+10, 40+14))
+lines(myHist$mids, dbeta(myHist$mids, 40+14, 40+10)/dbetasum, col="green")
+
+#grid plot
+plot(posteriorDistributionGrid/sum)
+my_gridHist = hist(posteriorDistributionGrid, breaks = 200, plot = FALSE)
+lines(my_gridHist$mids, dbeta(my_gridHist$mids, 40+14, 40+10)/dbetasum, col = "yellow")
+
+```
+
+##### 1C) Repeat the above calculation, but for a case of 583 heads and 417 tails. (You may need to adjust your model step parameters to try and get the grid and Metropolis graphs to match up).
+
+```{r}
+numIterations = 500000
+
+#metro
+piOld = 0.5
+posteriorDistribution1 = vector()
+xVals = seq(0,1,1/numIterations);
+
+for( i in 1:numIterations )
+{
+	pOld = dbinom( 583, 583+417, piOld) * (dexp(piOld, rate=5)/0.9932621)
+	piNew = piOld + rnorm(1, 0, sd =0.01);
+	
+	if( piNew > 1) 
+		piNew = 1;
+	
+	if( piNew < 0 ) 
+		piNew = 0;
+		
+	pNew = dbinom( 583, 583+417, piNew) * (dexp(piNew, rate=5)/0.9932621)
+	ratio = pNew / pOld
+	
+	if( ratio > 1 || ratio >= runif(1) ) 
+		piOld = piNew;
+		
+	posteriorDistribution1[i] = piOld;	
+}
+
+#metro plot 
+myHist = hist(posteriorDistribution1, breaks=200, plot=FALSE)
+plot(myHist$mids, myHist$counts/i, ylim=c(0,0.05), col='blue') 
+
+#grid
+numBreaks=1000;
+posteriorDistribution1Grid = vector(length=numBreaks)
+xVals = seq(0,1,1/numBreaks);
+i = 1;
+sum = 0;
+
+for( x in xVals )
+{
+	posteriorDistribution1Grid[i] = (dexp(x, rate=5)/0.9932621) * dbinom(583, 583+417, x)
+	sum = sum + posteriorDistribution1Grid[i];
+	i = i + 1;	
+}
+
+#beta grid
+dbetasum = sum(dbeta(myHist$mids, 40+583, 40+417))
+lines(myHist$mids, dbeta(myHist$mids, 40+583, 40+417)/dbetasum, col="green")
+
+#grid plot
+plot(posteriorDistribution1Grid/sum)
+my_gridHist1 = hist(posteriorDistribution1Grid, breaks=200, plot=FALSE)
+lines(my_gridHist1$mids, dbeta(my_gridHist1$mids, 40+583, 40+417)/dbetasum, col="yellow")
+```
+
+###### How do the three posterior curves relate to each other now? 
+* The Metropolis algorithm with an exp prior and the exact analytical solution from a beta(40,40) prior now have almost identical posterior distributions. While the grid approximation with an exp prior has a much narrower posterior distribution. 
+
+###### Why does this plot look different than the plot in (1B)?
+* The plots look different because there are more data points involved to improve accuracy. 

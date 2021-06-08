@@ -1,0 +1,138 @@
+---
+title: "Lab 7 - BINF 6310"
+author: "Erin Tsai"
+date: "5/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1: 
+##### RNA seq dataset of E. Coli genes from mice here: http://afodor.github.io/classes/stats2015/longitdunalRNASeqData.zip
+##### Read and normalize the counts table.
+```{r}
+myT = read.table("longitdunalRNASeqData/nc101_scaff_dataCounts.txt", sep = "\t", header = TRUE, row.names = 1)
+
+myT = myT[apply(myT, 1, median)> 5,]
+
+myTNorm = myT
+for(i in 1:ncol(myT)){
+  colSum = sum(myT[,i])
+  myTNorm[,i] = myTNorm[,i]/colSum
+}
+
+```
+
+##### 1A) For each row in the spreadsheet, perform a one-way ANOVA with categories "day2", "week 12", and "week 18". Plot out the histogram of all p-values. 
+
+```{r}
+time_points = factor(c(rep('Day2', 3), rep('Week12',3), rep('Week18', 5)))
+pvals_anova = vector(mode = "numeric", length = nrow(myTNorm))
+
+for(i in 1:nrow(myTNorm)){
+  
+  row = as.numeric(myTNorm[i,])
+  
+  myLm = lm(row ~ time_points, x = TRUE)
+  
+  pvals_anova[i] = anova(myLm)$"Pr(>F"[1]
+}
+
+hist(pvals_anova)
+
+fdr_pvals = sum(p.adjust(pvals_anova, 'BH') < 0.05)
+
+```
+
+How many genes are significant at a BH FDR-corrected 0.05 threshold.
+
+* **`r fdr_pvals`** genes are significant at a BH FDR-corrected 0.05 threshold.
+
+##### 1B) Next make an ANOVA as a linear regression as a function of time (so 2 days, 86 days, and 128 days). Plot out the histogram of all p-values.
+
+```{r}
+day_points = c(rep(2, 3), rep(86,3), rep(128, 5))
+pvals_dayCounts = vector(mode = "numeric", length = nrow(myTNorm))
+
+for(i in 1:nrow(myTNorm)){
+  
+  row1 = as.numeric(myTNorm[i,])
+  
+  myLm1 = lm(row1 ~ day_points, x = TRUE)
+  
+  pvals_dayCounts[i] = anova(myLm1)$"Pr(>F"[1]
+}
+
+hist(pvals_dayCounts)
+
+fdr_pvals_days = sum(p.adjust(pvals_dayCounts, 'BH') < 0.05)
+
+```
+
+How many genes are significant at a BH FDR-corrected 0.05 threshold.
+
+* **`r fdr_pvals_days`** genes are significant at a BH FDR-corrected 0.05 threshold.
+
+##### 1C) Finally, for each row in the spreadsheet perform an ANVOA comparing the three-parameter model from (1A) and the two parameter model from (1B).  Plot out the histogram of all p-values.
+
+```{r}
+pvals_3v2 = vector(mode = "numeric", length = nrow(myTNorm))
+
+for(i in 1:nrow(myTNorm)){
+  row = as.numeric(myTNorm[i,])
+  myLm = lm(row ~ time_points, x = TRUE)
+  row1 = as.numeric(myTNorm[i,])
+  myLm1 = lm(row1 ~ day_points, x = TRUE)
+  
+  a_residuals = sum(residuals(myLm)^2)
+  b_residuals = sum(residuals(myLm1)^2)
+  
+  f = ((b_residuals - a_residuals)/1)/(a_residuals/8)
+  
+  pvals_3v2[i] = pf(f, 1, 8, lower.tail = FALSE)
+}
+
+hist(pvals_3v2)
+
+fdr_3v2 = sum(p.adjust(pvals_3v2, 'BH') < 0.05)
+
+```
+
+For how many genes is there a significant difference between these two models at a BH FDR-corrected threshold. 
+
+* **`r fdr_3v2`** gene(s) show a significant difference between these two models at a BH FDR-corrected threshold.
+
+##### 1D) Make three graphs showing the relative abundance of the most significant gene under each of the three ANOVA models.  For (A) and (C), the x-axis will the category (day 3, week 12 and week 18) and the y-axis will be the relative abundance.  Be sure to properly label and title all graphs and axes.  For (B) the x-axis will be time (in days) and the y-axis will be the relative abundance. For the graph of the top hit from (B), include the regression line for the plot from (B).
+
+```{r}
+index = 0
+for(i in 1:nrow(myTNorm)){
+  index[i] = i
+}
+
+myFrame = data.frame(index, pvals_anova, pvals_dayCounts, pvals_3v2)
+
+myFrame1 = myFrame[order(myFrame$pvals_anova), ]
+myFrame2 = myFrame[order(myFrame$pvals_dayCounts), ]
+myFrame3 = myFrame[order(myFrame$pvals_3v2), ]
+
+boxplot(as.numeric(myTNorm[myFrame1$index[1], ]) ~ time_points, xlab = "Time Points", ylab = "Relative Abundance", main = "One Way ANOVA P-Values")
+
+boxplot(as.numeric(myTNorm[myFrame2$index[1], ]) ~ time_points, xlab = "Time (in Days)", ylab = "Relative Abundance", main = "ANOVA Lin Reg P-Values")
+abline(myLm1, col='green')
+
+boxplot(as.numeric(myTNorm[myFrame3$index[1], ]) ~ time_points, xlab = "Time Points", ylab = "Relative Abundance", main = c(("ANOVA Comparisons 2-Parameter"), ("vs. 3-parameter P-values")))
+
+```
+
+
+##### 1E) Overall, do you think the three parameter model in (A) or the two-parameter model in (B) is more appropriate for these data?  Justify your answer.
+
+* I think the the two-parameter model we used in 1A is more appropriate for this dataset. The boxplots showed that when comparing the two-parameter and the three-parameter models, that it seems to look closer to the two-parameter model overall. This could indicate that this is close to the model we want to use. 
+
+
+
+
+

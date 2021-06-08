@@ -1,0 +1,31 @@
+Primary Strata Name,Secondary Strata Name,Age Group,Count,Percent,Percent Population,population percent,count*pop
+White,0-4 yr,1,224,0.3,61.2,0.612,137.088
+White,5-17 yr,2,378,0.5,61.2,0.612,231.336
+White,18-49 yr,3,10066,14.6,61.2,0.612,6160.392
+White,50-64 yr,4,16445,23.9,61.2,0.612,10064.34
+White,65+ yr,5,41705,60.6,61.2,0.612,25523.46
+Black,0-4 yr,1,262,0.6,12.4,0.124,32.488
+Black,5-17 yr,2,484,1.1,12.4,0.124,60.016
+Black,18-49 yr,3,12349,28.1,12.4,0.124,1531.276
+Black,50-64 yr,4,14049,32,12.4,0.124,1742.076
+Black,65+ yr,5,16821,38.3,12.4,0.124,2085.804
+Hispanic/Latino,0-4 yr,1,335,1.1,17.2,0.172,57.62
+Hispanic/Latino,5-17 yr,2,568,1.9,17.2,0.172,97.696
+Hispanic/Latino,18-49 yr,3,13174,43.9,17.2,0.172,2265.928
+Hispanic/Latino,50-64 yr,4,8554,28.5,17.2,0.172,1471.288
+Hispanic/Latino,65+ yr,5,7372,24.6,17.2,0.172,1267.984
+Asian/Pacific Islander,0-4 yr,1,65,0.8,6.1,0.061,3.965
+Asian/Pacific Islander,5-17 yr,2,65,0.8,6.1,0.061,3.965
+Asian/Pacific Islander,18-49 yr,3,2138,26.3,6.1,0.061,130.418
+Asian/Pacific Islander,50-64 yr,4,2248,27.7,6.1,0.061,137.128
+Asian/Pacific Islander,65+ yr,5,3611,44.4,6.1,0.061,220.271
+American Indian/Alaska Native,0-4 yr,1,10,0.5,0.8,0.008,0.08
+American Indian/Alaska Native,5-17 yr,2,15,0.7,0.8,0.008,0.12
+American Indian/Alaska Native,18-49 yr,3,793,37.4,0.8,0.008,6.344
+American Indian/Alaska Native,50-64 yr,4,665,31.4,0.8,0.008,5.32
+American Indian/Alaska Native,65+ yr,5,638,30.1,0.8,0.008,5.104
+Other,0-4 yr,1,68,0.7,2.3,0.023,1.564
+Other,5-17 yr,2,71,0.8,2.3,0.023,1.633
+Other,18-49 yr,3,2640,29,2.3,0.023,60.72
+Other,50-64 yr,4,2479,27.3,2.3,0.023,57.017
+Other,65+ yr,5,3839,42.2,2.3,0.023,88.297

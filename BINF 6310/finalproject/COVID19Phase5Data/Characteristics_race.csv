@@ -1,0 +1,351 @@
+Primary Strata,Primary Strata Name,Secondary Strata,Secondary Strata Name,Count,Percent
+Age,0-4 yr,Sex,Male,527,54.6
+Age,0-4 yr,Sex,Female,438,45.4
+Age,0-4 yr,Race/Ethnicity,White,224,23.2
+Age,0-4 yr,Race/Ethnicity,Black,262,27.2
+Age,0-4 yr,Race/Ethnicity,Hispanic/Latino,335,34.8
+Age,0-4 yr,Race/Ethnicity,Asian/Pacific Islander,65,6.7
+Age,0-4 yr,Race/Ethnicity,American Indian/Alaska Native,10,1
+Age,0-4 yr,Race/Ethnicity,Other,68,7.1
+Age,5-17 yr,Sex,Male,748,47.3
+Age,5-17 yr,Sex,Female,833,52.7
+Age,5-17 yr,Race/Ethnicity,White,378,23.9
+Age,5-17 yr,Race/Ethnicity,Black,484,30.6
+Age,5-17 yr,Race/Ethnicity,Hispanic/Latino,568,35.9
+Age,5-17 yr,Race/Ethnicity,Asian/Pacific Islander,65,4.1
+Age,5-17 yr,Race/Ethnicity,American Indian/Alaska Native,15,0.9
+Age,5-17 yr,Race/Ethnicity,Other,71,4.5
+Age,18-49 yr,Sex,Male,19233,46.2
+Age,18-49 yr,Sex,Female,22352,53.8
+Age,18-49 yr,Race/Ethnicity,White,10066,24.5
+Age,18-49 yr,Race/Ethnicity,Black,12349,30
+Age,18-49 yr,Race/Ethnicity,Hispanic/Latino,13174,32
+Age,18-49 yr,Race/Ethnicity,Asian/Pacific Islander,2138,5.2
+Age,18-49 yr,Race/Ethnicity,American Indian/Alaska Native,793,1.9
+Age,18-49 yr,Race/Ethnicity,Other,2640,6.4
+Age,50-64 yr,Sex,Male,25169,56
+Age,50-64 yr,Sex,Female,19764,44
+Age,50-64 yr,Race/Ethnicity,White,16445,37
+Age,50-64 yr,Race/Ethnicity,Black,14049,31.6
+Age,50-64 yr,Race/Ethnicity,Hispanic/Latino,8554,19.2
+Age,50-64 yr,Race/Ethnicity,Asian/Pacific Islander,2248,5.1
+Age,50-64 yr,Race/Ethnicity,American Indian/Alaska Native,665,1.5
+Age,50-64 yr,Race/Ethnicity,Other,2479,5.6
+Age,65+ yr,Sex,Male,37228,49.7
+Age,65+ yr,Sex,Female,37706,50.3
+Age,65+ yr,Race/Ethnicity,White,41705,56.4
+Age,65+ yr,Race/Ethnicity,Black,16821,22.7
+Age,65+ yr,Race/Ethnicity,Hispanic/Latino,7372,10
+Age,65+ yr,Race/Ethnicity,Asian/Pacific Islander,3611,4.9
+Age,65+ yr,Race/Ethnicity,American Indian/Alaska Native,638,0.9
+Age,65+ yr,Race/Ethnicity,Other,3839,5.2
+Age,Overall,Sex,Male,82905,50.6
+Age,Overall,Sex,Female,81093,49.4
+Age,Overall,Race/Ethnicity,White,68818,42.4
+Age,Overall,Race/Ethnicity,Black,43965,27.1
+Age,Overall,Race/Ethnicity,Hispanic/Latino,30003,18.5
+Age,Overall,Race/Ethnicity,Asian/Pacific Islander,8127,5
+Age,Overall,Race/Ethnicity,American Indian/Alaska Native,2121,1.3
+Age,Overall,Race/Ethnicity,Other,9097,5.6
+Sex,Male,Age,0-4 yr,527,0.6
+Sex,Male,Age,5-17 yr,748,0.9
+Sex,Male,Age,18-49 yr,19233,23.2
+Sex,Male,Age,50-64 yr,25169,30.4
+Sex,Male,Age,65+ yr,37228,44.9
+Sex,Male,Race/Ethnicity,White,35564,43.4
+Sex,Male,Race/Ethnicity,Black,20722,25.3
+Sex,Male,Race/Ethnicity,Hispanic/Latino,15575,19
+Sex,Male,Race/Ethnicity,Asian/Pacific Islander,4147,5.1
+Sex,Male,Race/Ethnicity,American Indian/Alaska Native,965,1.2
+Sex,Male,Race/Ethnicity,Other,4953,6
+Sex,Female,Age,0-4 yr,438,0.5
+Sex,Female,Age,5-17 yr,833,1
+Sex,Female,Age,18-49 yr,22352,27.6
+Sex,Female,Age,50-64 yr,19764,24.4
+Sex,Female,Age,65+ yr,37706,46.5
+Sex,Female,Race/Ethnicity,White,33253,41.5
+Sex,Female,Race/Ethnicity,Black,23243,29
+Sex,Female,Race/Ethnicity,Hispanic/Latino,14428,18
+Sex,Female,Race/Ethnicity,Asian/Pacific Islander,3980,5
+Sex,Female,Race/Ethnicity,American Indian/Alaska Native,1156,1.4
+Sex,Female,Race/Ethnicity,Other,4144,5.2
+Race/Ethnicity,White,Age,0-4 yr,224,0.3
+Race/Ethnicity,White,Age,5-17 yr,378,0.5
+Race/Ethnicity,White,Age,18-49 yr,10066,14.6
+Race/Ethnicity,White,Age,50-64 yr,16445,23.9
+Race/Ethnicity,White,Age,65+ yr,41705,60.6
+Race/Ethnicity,White,Sex,Male,35564,51.7
+Race/Ethnicity,White,Sex,Female,33253,48.3
+Race/Ethnicity,Black,Age,0-4 yr,262,0.6
+Race/Ethnicity,Black,Age,5-17 yr,484,1.1
+Race/Ethnicity,Black,Age,18-49 yr,12349,28.1
+Race/Ethnicity,Black,Age,50-64 yr,14049,32
+Race/Ethnicity,Black,Age,65+ yr,16821,38.3
+Race/Ethnicity,Black,Sex,Male,20722,47.1
+Race/Ethnicity,Black,Sex,Female,23243,52.9
+Race/Ethnicity,Hispanic/Latino,Age,0-4 yr,335,1.1
+Race/Ethnicity,Hispanic/Latino,Age,5-17 yr,568,1.9
+Race/Ethnicity,Hispanic/Latino,Age,18-49 yr,13174,43.9
+Race/Ethnicity,Hispanic/Latino,Age,50-64 yr,8554,28.5
+Race/Ethnicity,Hispanic/Latino,Age,65+ yr,7372,24.6
+Race/Ethnicity,Hispanic/Latino,Sex,Male,15575,51.9
+Race/Ethnicity,Hispanic/Latino,Sex,Female,14428,48.1
+Race/Ethnicity,Asian/Pacific Islander,Age,0-4 yr,65,0.8
+Race/Ethnicity,Asian/Pacific Islander,Age,5-17 yr,65,0.8
+Race/Ethnicity,Asian/Pacific Islander,Age,18-49 yr,2138,26.3
+Race/Ethnicity,Asian/Pacific Islander,Age,50-64 yr,2248,27.7
+Race/Ethnicity,Asian/Pacific Islander,Age,65+ yr,3611,44.4
+Race/Ethnicity,Asian/Pacific Islander,Sex,Male,4147,51
+Race/Ethnicity,Asian/Pacific Islander,Sex,Female,3980,49
+Race/Ethnicity,American Indian/Alaska Native,Age,0-4 yr,10,0.5
+Race/Ethnicity,American Indian/Alaska Native,Age,5-17 yr,15,0.7
+Race/Ethnicity,American Indian/Alaska Native,Age,18-49 yr,793,37.4
+Race/Ethnicity,American Indian/Alaska Native,Age,50-64 yr,665,31.4
+Race/Ethnicity,American Indian/Alaska Native,Age,65+ yr,638,30.1
+Race/Ethnicity,American Indian/Alaska Native,Sex,Male,965,45.5
+Race/Ethnicity,American Indian/Alaska Native,Sex,Female,1156,54.5
+Race/Ethnicity,Other,Age,0-4 yr,68,0.7
+Race/Ethnicity,Other,Age,5-17 yr,71,0.8
+Race/Ethnicity,Other,Age,18-49 yr,2640,29
+Race/Ethnicity,Other,Age,50-64 yr,2479,27.3
+Race/Ethnicity,Other,Age,65+ yr,3839,42.2
+Race/Ethnicity,Other,Sex,Male,4953,54.4
+Race/Ethnicity,Other,Sex,Female,4144,45.6
+Month,20-Mar,Age,0-4 yr,,0.2
+Month,20-Mar,Age,5-17 yr,,0.3
+Month,20-Mar,Age,18-49 yr,,24.3
+Month,20-Mar,Age,50-64 yr,,32.7
+Month,20-Mar,Age,65+ yr,,42.5
+Month,20-Mar,Sex,Male,,55.1
+Month,20-Mar,Sex,Female,,44.9
+Month,20-Mar,Race/Ethnicity,White,,36.6
+Month,20-Mar,Race/Ethnicity,Black,,40
+Month,20-Mar,Race/Ethnicity,Hispanic/Latino,,13.7
+Month,20-Mar,Race/Ethnicity,Asian/Pacific Islander,,5.1
+Month,20-Mar,Race/Ethnicity,American Indian/Alaska Native,,0.5
+Month,20-Mar,Race/Ethnicity,Other,,4.1
+Month,20-Apr,Age,0-4 yr,,0.3
+Month,20-Apr,Age,5-17 yr,,0.3
+Month,20-Apr,Age,18-49 yr,,23
+Month,20-Apr,Age,50-64 yr,,28.8
+Month,20-Apr,Age,65+ yr,,47.6
+Month,20-Apr,Sex,Male,,53.2
+Month,20-Apr,Sex,Female,,46.8
+Month,20-Apr,Race/Ethnicity,White,,35.4
+Month,20-Apr,Race/Ethnicity,Black,,34.2
+Month,20-Apr,Race/Ethnicity,Hispanic/Latino,,20.9
+Month,20-Apr,Race/Ethnicity,Asian/Pacific Islander,,4.5
+Month,20-Apr,Race/Ethnicity,American Indian/Alaska Native,,1.3
+Month,20-Apr,Race/Ethnicity,Other,,3.7
+Month,20-May,Age,0-4 yr,,0.6
+Month,20-May,Age,5-17 yr,,0.9
+Month,20-May,Age,18-49 yr,,29.3
+Month,20-May,Age,50-64 yr,,28
+Month,20-May,Age,65+ yr,,41.2
+Month,20-May,Sex,Male,,49.9
+Month,20-May,Sex,Female,,50.1
+Month,20-May,Race/Ethnicity,White,,31.9
+Month,20-May,Race/Ethnicity,Black,,29.1
+Month,20-May,Race/Ethnicity,Hispanic/Latino,,27.7
+Month,20-May,Race/Ethnicity,Asian/Pacific Islander,,4.9
+Month,20-May,Race/Ethnicity,American Indian/Alaska Native,,2.4
+Month,20-May,Race/Ethnicity,Other,,4
+Month,20-Jun,Age,0-4 yr,,0.9
+Month,20-Jun,Age,5-17 yr,,1.1
+Month,20-Jun,Age,18-49 yr,,36.1
+Month,20-Jun,Age,50-64 yr,,27.7
+Month,20-Jun,Age,65+ yr,,34.1
+Month,20-Jun,Sex,Male,,49.2
+Month,20-Jun,Sex,Female,,50.8
+Month,20-Jun,Race/Ethnicity,White,,26.5
+Month,20-Jun,Race/Ethnicity,Black,,30.4
+Month,20-Jun,Race/Ethnicity,Hispanic/Latino,,30.3
+Month,20-Jun,Race/Ethnicity,Asian/Pacific Islander,,5.8
+Month,20-Jun,Race/Ethnicity,American Indian/Alaska Native,,1.8
+Month,20-Jun,Race/Ethnicity,Other,,5.2
+Month,20-Jul,Age,0-4 yr,,0.8
+Month,20-Jul,Age,5-17 yr,,1
+Month,20-Jul,Age,18-49 yr,,34.2
+Month,20-Jul,Age,50-64 yr,,28.3
+Month,20-Jul,Age,65+ yr,,35.7
+Month,20-Jul,Sex,Male,,49.7
+Month,20-Jul,Sex,Female,,50.3
+Month,20-Jul,Race/Ethnicity,White,,28.8
+Month,20-Jul,Race/Ethnicity,Black,,37.1
+Month,20-Jul,Race/Ethnicity,Hispanic/Latino,,23.9
+Month,20-Jul,Race/Ethnicity,Asian/Pacific Islander,,4.6
+Month,20-Jul,Race/Ethnicity,American Indian/Alaska Native,,1
+Month,20-Jul,Race/Ethnicity,Other,,4.7
+Month,20-Aug,Age,0-4 yr,,0.7
+Month,20-Aug,Age,5-17 yr,,1.3
+Month,20-Aug,Age,18-49 yr,,33.1
+Month,20-Aug,Age,50-64 yr,,27.6
+Month,20-Aug,Age,65+ yr,,37.3
+Month,20-Aug,Sex,Male,,48.9
+Month,20-Aug,Sex,Female,,51.1
+Month,20-Aug,Race/Ethnicity,White,,33
+Month,20-Aug,Race/Ethnicity,Black,,31.6
+Month,20-Aug,Race/Ethnicity,Hispanic/Latino,,22.6
+Month,20-Aug,Race/Ethnicity,Asian/Pacific Islander,,6.7
+Month,20-Aug,Race/Ethnicity,American Indian/Alaska Native,,0.6
+Month,20-Aug,Race/Ethnicity,Other,,5.4
+Month,20-Sep,Age,0-4 yr,,0.9
+Month,20-Sep,Age,5-17 yr,,1.3
+Month,20-Sep,Age,18-49 yr,,30.1
+Month,20-Sep,Age,50-64 yr,,27.2
+Month,20-Sep,Age,65+ yr,,40.5
+Month,20-Sep,Sex,Male,,48.4
+Month,20-Sep,Sex,Female,,51.6
+Month,20-Sep,Race/Ethnicity,White,,40.2
+Month,20-Sep,Race/Ethnicity,Black,,24.8
+Month,20-Sep,Race/Ethnicity,Hispanic/Latino,,22.2
+Month,20-Sep,Race/Ethnicity,Asian/Pacific Islander,,6.6
+Month,20-Sep,Race/Ethnicity,American Indian/Alaska Native,,1
+Month,20-Sep,Race/Ethnicity,Other,,5.2
+Month,20-Oct,Age,0-4 yr,,0.5
+Month,20-Oct,Age,5-17 yr,,1.2
+Month,20-Oct,Age,18-49 yr,,26
+Month,20-Oct,Age,50-64 yr,,27.5
+Month,20-Oct,Age,65+ yr,,44.8
+Month,20-Oct,Sex,Male,,51.2
+Month,20-Oct,Sex,Female,,48.8
+Month,20-Oct,Race/Ethnicity,White,,46.4
+Month,20-Oct,Race/Ethnicity,Black,,21
+Month,20-Oct,Race/Ethnicity,Hispanic/Latino,,21.9
+Month,20-Oct,Race/Ethnicity,Asian/Pacific Islander,,4.6
+Month,20-Oct,Race/Ethnicity,American Indian/Alaska Native,,1.2
+Month,20-Oct,Race/Ethnicity,Other,,4.9
+Month,20-Nov,Age,0-4 yr,,0.5
+Month,20-Nov,Age,5-17 yr,,0.9
+Month,20-Nov,Age,18-49 yr,,22.1
+Month,20-Nov,Age,50-64 yr,,26.2
+Month,20-Nov,Age,65+ yr,,50.3
+Month,20-Nov,Sex,Male,,51.2
+Month,20-Nov,Sex,Female,,48.8
+Month,20-Nov,Race/Ethnicity,White,,50
+Month,20-Nov,Race/Ethnicity,Black,,19.2
+Month,20-Nov,Race/Ethnicity,Hispanic/Latino,,17.7
+Month,20-Nov,Race/Ethnicity,Asian/Pacific Islander,,4.7
+Month,20-Nov,Race/Ethnicity,American Indian/Alaska Native,,1.6
+Month,20-Nov,Race/Ethnicity,Other,,6.9
+Month,20-Dec,Age,0-4 yr,,0.6
+Month,20-Dec,Age,5-17 yr,,0.7
+Month,20-Dec,Age,18-49 yr,,20.8
+Month,20-Dec,Age,50-64 yr,,25.5
+Month,20-Dec,Age,65+ yr,,52.4
+Month,20-Dec,Sex,Male,,50.1
+Month,20-Dec,Sex,Female,,49.9
+Month,20-Dec,Race/Ethnicity,White,,48.7
+Month,20-Dec,Race/Ethnicity,Black,,23.3
+Month,20-Dec,Race/Ethnicity,Hispanic/Latino,,14.9
+Month,20-Dec,Race/Ethnicity,Asian/Pacific Islander,,5
+Month,20-Dec,Race/Ethnicity,American Indian/Alaska Native,,1.5
+Month,20-Dec,Race/Ethnicity,Other,,6.6
+Month,21-Jan,Age,0-4 yr,,0.6
+Month,21-Jan,Age,5-17 yr,,1
+Month,21-Jan,Age,18-49 yr,,21.4
+Month,21-Jan,Age,50-64 yr,,26.2
+Month,21-Jan,Age,65+ yr,,50.7
+Month,21-Jan,Sex,Male,,50.1
+Month,21-Jan,Sex,Female,,49.9
+Month,21-Jan,Race/Ethnicity,White,,47.4
+Month,21-Jan,Race/Ethnicity,Black,,25.3
+Month,21-Jan,Race/Ethnicity,Hispanic/Latino,,14.5
+Month,21-Jan,Race/Ethnicity,Asian/Pacific Islander,,5.4
+Month,21-Jan,Race/Ethnicity,American Indian/Alaska Native,,1.4
+Month,21-Jan,Race/Ethnicity,Other,,6.1
+Month,21-Feb,Age,0-4 yr,,0.6
+Month,21-Feb,Age,5-17 yr,,1.5
+Month,21-Feb,Age,18-49 yr,,24.7
+Month,21-Feb,Age,50-64 yr,,27
+Month,21-Feb,Age,65+ yr,,46.2
+Month,21-Feb,Sex,Male,,50.5
+Month,21-Feb,Sex,Female,,49.5
+Month,21-Feb,Race/Ethnicity,White,,45.1
+Month,21-Feb,Race/Ethnicity,Black,,28.4
+Month,21-Feb,Race/Ethnicity,Hispanic/Latino,,14.6
+Month,21-Feb,Race/Ethnicity,Asian/Pacific Islander,,5.1
+Month,21-Feb,Race/Ethnicity,American Indian/Alaska Native,,0.8
+Month,21-Feb,Race/Ethnicity,Other,,5.9
+Intensive care unit,Yes       ,Age,0-4 yr,,0.6
+Intensive care unit,Yes       ,Age,5-17 yr,,1.2
+Intensive care unit,Yes       ,Age,18-49 yr,,19.5
+Intensive care unit,Yes       ,Age,50-64 yr,,30
+Intensive care unit,Yes       ,Age,65+ yr,,48.7
+Intensive care unit,Yes       ,Sex,Male,,58.5
+Intensive care unit,Yes       ,Sex,Female,,41.5
+Intensive care unit,Yes       ,Race/Ethnicity,White,,38.6
+Intensive care unit,Yes       ,Race/Ethnicity,Black,,26.1
+Intensive care unit,Yes       ,Race/Ethnicity,Hispanic/Latino,,21.3
+Intensive care unit,Yes       ,Race/Ethnicity,Asian/Pacific Islander,,7.9
+Intensive care unit,Yes       ,Race/Ethnicity,American Indian/Alaska Native,,2
+Intensive care unit,Yes       ,Race/Ethnicity,Other,,4.2
+Intensive care unit,No        ,Age,0-4 yr,,0.6
+Intensive care unit,No        ,Age,5-17 yr,,0.9
+Intensive care unit,No        ,Age,18-49 yr,,27.2
+Intensive care unit,No        ,Age,50-64 yr,,26.7
+Intensive care unit,No        ,Age,65+ yr,,44.6
+Intensive care unit,No        ,Sex,Male,,48
+Intensive care unit,No        ,Sex,Female,,52
+Intensive care unit,No        ,Race/Ethnicity,White,,43.7
+Intensive care unit,No        ,Race/Ethnicity,Black,,27.4
+Intensive care unit,No        ,Race/Ethnicity,Hispanic/Latino,,17.7
+Intensive care unit,No        ,Race/Ethnicity,Asian/Pacific Islander,,6
+Intensive care unit,No        ,Race/Ethnicity,American Indian/Alaska Native,,1.4
+Intensive care unit,No        ,Race/Ethnicity,Other,,3.8
+Mechanical ventilation,Yes       ,Age,0-4 yr,,0.3
+Mechanical ventilation,Yes       ,Age,5-17 yr,,0.4
+Mechanical ventilation,Yes       ,Age,18-49 yr,,17.8
+Mechanical ventilation,Yes       ,Age,50-64 yr,,30
+Mechanical ventilation,Yes       ,Age,65+ yr,,51.5
+Mechanical ventilation,Yes       ,Sex,Male,,59.1
+Mechanical ventilation,Yes       ,Sex,Female,,40.9
+Mechanical ventilation,Yes       ,Race/Ethnicity,White,,35.3
+Mechanical ventilation,Yes       ,Race/Ethnicity,Black,,26.5
+Mechanical ventilation,Yes       ,Race/Ethnicity,Hispanic/Latino,,23.8
+Mechanical ventilation,Yes       ,Race/Ethnicity,Asian/Pacific Islander,,8.4
+Mechanical ventilation,Yes       ,Race/Ethnicity,American Indian/Alaska Native,,2
+Mechanical ventilation,Yes       ,Race/Ethnicity,Other,,4.1
+Mechanical ventilation,No        ,Age,0-4 yr,,0.6
+Mechanical ventilation,No        ,Age,5-17 yr,,1
+Mechanical ventilation,No        ,Age,18-49 yr,,26.6
+Mechanical ventilation,No        ,Age,50-64 yr,,27.1
+Mechanical ventilation,No        ,Age,65+ yr,,44.7
+Mechanical ventilation,No        ,Sex,Male,,49.1
+Mechanical ventilation,No        ,Sex,Female,,50.9
+Mechanical ventilation,No        ,Race/Ethnicity,White,,43.6
+Mechanical ventilation,No        ,Race/Ethnicity,Black,,27.2
+Mechanical ventilation,No        ,Race/Ethnicity,Hispanic/Latino,,17.7
+Mechanical ventilation,No        ,Race/Ethnicity,Asian/Pacific Islander,,6.1
+Mechanical ventilation,No        ,Race/Ethnicity,American Indian/Alaska Native,,1.5
+Mechanical ventilation,No        ,Race/Ethnicity,Other,,3.9
+In-hospital death,Yes       ,Age,0-4 yr,,0.1
+In-hospital death,Yes       ,Age,5-17 yr,,0.1
+In-hospital death,Yes       ,Age,18-49 yr,,5.7
+In-hospital death,Yes       ,Age,50-64 yr,,20.7
+In-hospital death,Yes       ,Age,65+ yr,,73.5
+In-hospital death,Yes       ,Sex,Male,,58.3
+In-hospital death,Yes       ,Sex,Female,,41.7
+In-hospital death,Yes       ,Race/Ethnicity,White,,46.2
+In-hospital death,Yes       ,Race/Ethnicity,Black,,22.5
+In-hospital death,Yes       ,Race/Ethnicity,Hispanic/Latino,,18.3
+In-hospital death,Yes       ,Race/Ethnicity,Asian/Pacific Islander,,7.6
+In-hospital death,Yes       ,Race/Ethnicity,American Indian/Alaska Native,,2.2
+In-hospital death,Yes       ,Race/Ethnicity,Other,,3.3
+In-hospital death,No        ,Age,0-4 yr,,0.7
+In-hospital death,No        ,Age,5-17 yr,,1.1
+In-hospital death,No        ,Age,18-49 yr,,27.8
+In-hospital death,No        ,Age,50-64 yr,,28.3
+In-hospital death,No        ,Age,65+ yr,,42.2
+In-hospital death,No        ,Sex,Male,,49.6
+In-hospital death,No        ,Sex,Female,,50.4
+In-hospital death,No        ,Race/Ethnicity,White,,42
+In-hospital death,No        ,Race/Ethnicity,Black,,27.6
+In-hospital death,No        ,Race/Ethnicity,Hispanic/Latino,,18.6
+In-hospital death,No        ,Race/Ethnicity,Asian/Pacific Islander,,6.3
+In-hospital death,No        ,Race/Ethnicity,American Indian/Alaska Native,,1.4
+In-hospital death,No        ,Race/Ethnicity,Other,,4
+,,,,,
+"1.COVID-NET hospitalization data are preliminary and subject to change as more data become available. In particular, case counts and rates for recent hospital admissions are subject to delay. As data are received each week, prior case counts and rates are updated accordingly.",,,,,
+"2. White, Black, Asian/Pacific Islander and American Indian/Alaska Native all represent non-Hispanic ethnicity groups; Other includes persons in multiple race categories and persons for whom race is unknown.",,,,,
+"3. All data presented, including demographics (age, sex, race and ethnicity), interventions and outcomes, underlying medical conditions, signs/symptoms at admission, and discharge diagnoses  are restricted to sampled and completed cases with non-missing data reported during March 1, 2020 – March 31, 2021. Due to the sampling methodology for adults aged =18 years, counts and unweighted percentages are only presented for demographic data. Weighted percentages are presented for intensive care unit admission, mechanical ventilation, in-hospital death, underlying medical conditions, signs/symptoms at admission, and discharge diagnoses.",,,,,

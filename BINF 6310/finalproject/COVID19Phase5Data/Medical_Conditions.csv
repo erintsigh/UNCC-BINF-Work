@@ -1,0 +1,19 @@
+Selected Underlying Medical Conditions of COVID-19-associated Hospitalizations from the COVID-NET Network (data downloaded on 5/14/2021)Centers for Disease Control and Prevention
+YEAR,MEDICAL CONDITION,CHILDREN-COUNT,CHILDREN-PERCENT(%),ADULTS-COUNT,ADULTS-PERCENT(%),FEMALES (15-44 YR)-COUNT,FEMALES (15-44 YR)-PERCENT(%)
+2020-21,Asthma,334,13.2,N/A,11.9,N/A,N/A
+2020-21,Cardiovascular disease,137,5.4,N/A,36.6,N/A,N/A
+2020-21,Chronic lung disease,126,5.0,N/A,20.0,N/A,N/A
+2020-21,Immune suppression,119,4.7,N/A,10.2,N/A,N/A
+2020-21,Metabolic disease,138,5.5,N/A,43.9,N/A,N/A
+2020-21,Neurologic disease,323,12.8,N/A,20.4,N/A,N/A
+2020-21,Other disease,498,19.7,N/A,12.0,N/A,N/A
+2020-21,No known condition,1196,47.2,N/A,8.1,N/A,N/A
+2020-21,Autoimmune disease ,11,0.4,N/A,3.1,N/A,N/A
+2020-21,Obesity,466,34.5,N/A,48.5,N/A,N/A
+2020-21,Pregnancy,N/A,N/A,N/A,N/A,N/A,29.4
+2020-21,Renal disease,39,1.5,N/A,16.8,N/A,N/A
+2020-21,Gastrointestinal/liver disease,41,1.6,N/A,5.3,N/A,N/A
+2020-21,Hypertension,54,2.1,N/A,59.4,N/A,N/A
+
+"1.COVID-NET hospitalization data are preliminary and subject to change as more data become available. In particular, case counts and rates for recent hospital admissions are subject to delay. As data are received each week, prior case counts and rates are updated accordingly."
+"2. Data are restricted to cases reported during March 1, 2020 – March 31, 2021, due to delays in reporting. During this time frame, sampling was conducted among hospitalized adults aged =18 years; therefore, counts are not shown, and weighted percentages are reported. The denominator for percentages among adults includes sampled cases with data on these conditions. No sampling was conducted among hospitalized children; therefore, the denominator for percentages of underlying medical conditions among children includes all pediatric cases with data on these conditions. Underlying medical conditions among pregnant women are included when "Adults" and/or "Pediatrics" is selected."

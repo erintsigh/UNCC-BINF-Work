@@ -1,0 +1,76 @@
+---
+title: "Lab 1 - BINF 6310"
+author: "Erin Tsai"
+date: "2/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 1
+##### What is the mean and variance for the loaded dice?
+```{r}
+mean = (1*0.1) + (2*0.1) + (3*0.1) + (4*0.1) + (5*0.1) + (0.5*6)
+variance = ((0.1)*(1-mean)^2) + ((0.1)*(2-mean)^2) + ((0.1)*(3-mean)^2) + ((0.1)*(4-mean)^2) + ((0.1)*(5-mean)^2) + ((0.5)*(6-mean)^2)
+```
+
+* The mean for the loaded die is **`r mean`**.
+* The variance for the loaded die is **`r variance`**.
+
+### Question 2
+##### Make a function in R that "rolls" this die; return a vector containing the rolls.
+```{r}
+numRolls <- 3000
+loaded_prob <- c(0.1,0.1,0.1,0.1,0.1,0.5)
+
+rolls <- vector(length=numRolls, mode = "double")
+for(i in 1: numRolls) rolls[i] <- sample(1:6, 1, replace = TRUE, prob = loaded_prob)
+rolls
+```
+
+### Question 3
+##### Make a histogram of some large number of rolls. Do the rolls of the loaded die approximate a uniform distribution?
+* No, they do not approximate uniform distribution because 6 has a higher chance of being rolled than the other numbers. 
+```{r, echo=FALSE}
+hist(rolls)
+```
+
+### Question 4
+##### Means vs. trial size plots of loaded die. How many rolls appear to be necessary to get convergence on the expected values for the mean and variance?
+```{r}
+mean_load <- mean(rolls)
+var_load <- var(rolls)
+
+trialSizes <- c(5,10,15,20,25,30,40,50,100,200,300,400,500,1000,2000,3000,4000,5000,10000,20000,30000,100000)
+means <- vector(mode = "double", length=length(trialSizes))
+variances <-vector(mode = "double", length=length(trialSizes))
+
+for(i in 1:length(trialSizes))
+{
+    rolls1 <- vector(length = trialSizes[i], mode = "double")
+    
+    for(j in 1:trialSizes[i])
+    {
+      rolls1[j] <- sample(1:6, 1, replace = TRUE, prob = loaded_prob)
+    }
+    
+    means[i] <- mean(rolls1);
+    
+    variances[i] <- var(rolls1)
+}
+
+plot(log10(trialSizes), means, main = "Means vs. Trial Size")
+lines(log10(trialSizes), rep(mean_load, length(trialSizes)))
+plot(log10(trialSizes), variances, main = "Variances vs. Trial Size")
+lines(log10(trialSizes), rep(var_load, length(trialSizes)))
+```
+
+
+
+
+* It takes approximately **1000-3000 rolls** to converge on the expected mean.
+* It takes approximately **1000-3000 rolls** to converge on the expected variance.
+
+

@@ -1,0 +1,96 @@
+---
+title: "Lab 6 - BINF 6310"
+author: "Erin Tsai"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem 1: 
+##### This question uses data from this paper: https://science.sciencemag.org/content/347/6217/78
+#### Variation in cancer risk among tissues can be explained by the number of stem cell divisions. Science 02 Jan 2015: Vol. 347, Issue 6217, pp. 78-81
+
+######  1A) Download the data from here examining the relationship between the number of cell divisions and cancer risk: https://fodorclasses.github.io/classes/stats2020/cancerRisk.txt
+###### On a log10-log10 scale graph Lifetime_cancer_risk (on the y-axis) vs. CumulativeCellDivisions (on the x-axis).  (This reproduces Fig. 1 from the paper). (You can read in the file with read.table("cancerRisk.txt", header=TRUE, sep="\t")
+
+```{r}
+cancerRisk_data = read.table("cancerRisk.txt", sep = "\t", header = TRUE)
+plot(log10(cancerRisk_data$CumulativeCellDivisions), log10(cancerRisk_data$Lifetime_cancer_risk))
+```
+
+###### 1B) Using the lm function, fit a linear model with Lifetime_cancer_risk as the Y variable and CumulativeCellDivisions as the x-data.  Add the regression line to the plot using the function abline(myLm)  (where myLm is the linear model you created).
+
+```{r}
+plot(log10(cancerRisk_data$CumulativeCellDivisions), log10(cancerRisk_data$Lifetime_cancer_risk))
+myLm = lm(log10(cancerRisk_data$Lifetime_cancer_risk) ~ log10(cancerRisk_data$CumulativeCellDivisions))
+abline(myLm)
+```
+
+###### 1C) What is the p-value for the null hypothesis that the slope of the regression between these two variables is zero?  What is the r-squared value of the model?
+
+```{r}
+x = summary(myLm)
+pval = anova(myLm)$"Pr(>F)"[1]
+rsquare = x$r.squared
+```
+
+* The p-value is **`r pval`**. And the r-squared value is **`r rsquare`**.
+
+###### 1D) Are the assumptions of constant variance and normal distribution of the residues reasonable for this model?  Justify your answer.
+
+```{r}
+plot(myLm)
+```
+
+* Based off of the Residuals vs. Fitted plot, it looks like it there is constant variance.
+* Based off of the QQ-norm plot, we can assume that the residuals have a normal distribution because the values form a line that is roughly straight. 
+
+### Problem 2:
+##### Consider the case-control file for the colorectal adenomas data set that is here: http://afodor.github.io/classes/stats2015/caseControlData.txt
+##### A separate file gives obesity (BMI) data for these same subjects: http://afodor.github.io/classes/stats2015/BMI_Data.txt 
+##### For each OTU in the spreadsheet, generate a p-value from linear regression comparing BMI to the relative abundance of each OTU. Graph out all the p-values. Hints:  To lookup the ids in the BMI table, you will need to some processing on the “sample” column in the caseControl file.
+
+```{r}
+caseControl_data = read.table("caseControlData.txt", header = TRUE)
+sampleID = caseControl_data$sample
+
+key = sub("case", "", sampleID)
+key = sub("control", "", key)
+
+key = strsplit(key, "_")
+lst = c()
+for(i in 1:length(key)){
+  lst[i] = key[[i]][1]
+}
+caseControl_data$sample = lst
+
+bmi_data = read.table("BMI_Data.txt", header = TRUE, sep = "\t")
+
+merge_data = merge(bmi_data, caseControl_data, by.x = "studyid", by.y = "sample")
+
+pvals = c()
+a = 1
+for(i in 3:ncol(merge_data)){
+  myLm1 = lm(merge_data$bmi ~ merge_data[,i])
+  pvals[a] = anova(myLm1)$'Pr(>F)'[1]
+  a = a + 1
+}
+
+hist(pvals)
+```
+
+###### Do they appear uniformly distributed? 
+* The p-values seem to be relatively uniformly distributed, based on the above histogram.
+
+###### Does the microbial community appear to be influencing body weight in this cohort? 
+* According to the histogram, it does not seem like the microbial community has any influence on BMI in this cohort (as it seems that the p-values seem to have relative equal probability).
+
+###### Are any of these associations significant at a 10% false discovery rate?
+
+```{r}
+fdr_results = sum(p.adjust(pvals, 'BH') < 0.10)
+```
+* **`r fdr_results`** of these associations are significant at a 10% false discovery rate.
+
